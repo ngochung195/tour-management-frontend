@@ -1,0 +1,11 @@
+<h2>Đăng nhập</h2>
+
+<form (ngSubmit)="login()">
+    <input type="text" placeholder="Email đăng nhập" [(ngModel)]="email" name="email" required>
+
+    <input type="password" placeholder="Mật khẩu" [(ngModel)]="password" name="password" required>
+
+    <button type="submit">Đăng nhập</button>
+
+    <p class="error" *ngIf="error">{{ error }}</p>
+</form>

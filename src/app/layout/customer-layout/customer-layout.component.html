@@ -1,0 +1,32 @@
+<header class="header">
+    <div class="container">
+
+        <div class="logo"> Travel<span>Go</span> </div>
+
+        <nav class="nav">
+            <a routerLink="/">Trang chủ</a>
+
+            <a routerLink="/booking/1"> Tour đặt </a>
+
+            <a href="#">Khuyến mãi</a>
+            <a href="#">Liên hệ</a>
+        </nav>
+
+        <div class="actions">
+
+            <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
+                <a routerLink="/register" class="login">Đăng ký</a>
+                <a routerLink="/login" class="login">Đăng nhập</a>
+            </ng-container>
+
+            <ng-template #loggedIn>
+                <button class="login" (click)="logout()">Đăng xuất</button>
+            </ng-template>
+
+            <button class="btn-primary" (click)="onBookNow()">Đặt ngay</button>
+
+        </div>
+    </div>
+</header>
+
+<router-outlet></router-outlet>

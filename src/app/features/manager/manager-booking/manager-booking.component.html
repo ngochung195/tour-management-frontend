@@ -1,0 +1,37 @@
+<h2>Quản lý Booking</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tour</th>
+            <th>Khách hàng</th>
+            <th>Số lượng</th>
+            <th>Tổng tiền</th>
+            <th>Ngày đặt</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let b of bookings">
+            <td>{{ b.id }}</td>
+            <td>{{ b.tour?.name }}</td>
+            <td>{{ b.user?.email }}</td>
+            <td>{{ b.quantity }}</td>
+            <td>{{ b.totalPrice | currency:'VND' }}</td>
+            <td>{{ b.bookingDate | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ b.status }}</td>
+            <td>
+                <button *ngIf="b.status === 'PENDING'" (click)="updateStatus(b.id, 'APPROVED')">
+                    Duyệt
+                </button>
+
+                <button *ngIf="b.status === 'PENDING'" (click)="updateStatus(b.id, 'REJECTED')">
+                    Từ chối
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

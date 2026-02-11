@@ -1,0 +1,55 @@
+.forbidden-container {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.forbidden-container h1 {
+    font-size: 48px;
+    color: #d32f2f;
+    margin-bottom: 10px;
+}
+
+.forbidden-container p {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.back-home {
+    padding: 12px 22px;
+    background-color: #1976d2;
+    color: #fff;
+
+    border: none;
+    outline: none;
+    border-radius: 8px;
+
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    transition: background-color 0.2s ease,
+        transform 0.1s ease;
+}
+
+.back-home:hover {
+    background-color: #125aa0;
+}
+
+.back-home:active {
+    transform: scale(0.97);
+}
+
+.back-home:focus,
+.back-home:focus-visible {
+    outline: none;
+    box-shadow: none;
+}
