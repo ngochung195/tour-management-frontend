@@ -1,0 +1,112 @@
+.booking-container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+}
+
+.image-wrapper {
+    text-align: center;
+    margin-bottom: 20px;
+
+    .tour-image {
+        width: 100%;
+        max-height: 350px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+}
+
+.tour-info {
+    margin-bottom: 20px;
+    font-size: 15px;
+
+    p {
+        margin: 6px 0;
+        color: #444;
+
+        strong {
+            color: #222;
+        }
+    }
+}
+
+.booking-form {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 16px;
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 16px;
+
+        label {
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        input {
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+
+            &:focus {
+                outline: none;
+                border-color: #0d6efd;
+                box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.2);
+            }
+        }
+    }
+}
+
+.total {
+    margin-bottom: 18px;
+    font-size: 16px;
+    text-align: right;
+
+    strong {
+        margin-right: 6px;
+    }
+}
+
+.btn-submit {
+    display: block;
+    margin: 0 auto;
+    padding: 10px 26px;
+    background-color: #0d6efd;
+    color: #fff;
+    font-size: 15px;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: #0b5ed7;
+    }
+
+    &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+}
+
+@media (max-width: 600px) {
+    .booking-container {
+        margin: 10px;
+        padding: 14px;
+    }
+
+    .total {
+        text-align: center;
+    }
+}

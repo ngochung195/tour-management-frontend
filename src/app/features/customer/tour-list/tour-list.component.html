@@ -1,12 +1,28 @@
-<h2>Danh sách tour</h2>
+<h2 class="page-title">Danh sách tour</h2>
 
 <div class="tour-list">
     <div class="tour-card" *ngFor="let tour of tours">
-        <img [src]="tour.img" alt="">
-        <h3>{{tour.tourName}}</h3>
-        <p>Giá: {{tour.price | currency: 'VND'}}</p>
-        <p>Ngày bắt đầu: {{ tour.startDate | date:'dd/MM/yyyy' }}</p>
-        <p>Ngày kết thúc: {{ tour.endDate | date:'dd/MM/yyyy' }}</p>
-        <button type="button" [routerLink]="['/customer/booking', tour.id]">Đặt tour</button>
+
+        <div class="image-box">
+            <img [src]="tour.img" alt="{{ tour.tourName }}">
+        </div>
+
+        <div class="content">
+            <div class="title-row">
+                <h3 class="tour-name">{{ tour.tourName }}</h3>
+                <span class="price">{{ tour.price | number }} đ</span>
+            </div>
+
+            <p class="date">
+                {{ tour.startDate | date:'dd/MM/yyyy' }}
+                →
+                {{ tour.endDate | date:'dd/MM/yyyy' }}
+            </p>
+
+            <button type="button" class="btn-book" [routerLink]="['/booking', tour.id]">
+                Đặt tour
+            </button>
+        </div>
+
     </div>
 </div>

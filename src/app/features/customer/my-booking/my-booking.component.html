@@ -1,0 +1,78 @@
+<div class="booking-container">
+
+    <h2 class="title">Danh Sách Tour Đã Đặt</h2>
+
+    <div class="filter-bar">
+
+        <input type="text" placeholder="Tìm theo tên tour..." [(ngModel)]="searchName" />
+
+        <input type="date" [(ngModel)]="searchDate" />
+
+        <button class="btn-search" (click)="applyFilters()">
+            Tìm kiếm
+        </button>
+
+        <button class="btn-reset" (click)="resetFilters()">
+            Xóa lọc
+        </button>
+
+    </div>
+
+    <div *ngIf="loading" class="loading">
+        Đang tải dữ liệu...
+    </div>
+
+    <table *ngIf="!loading && paginatedBookings.length > 0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên tour</th>
+                <th>Ngày đặt</th>
+                <th>Tổng tiền</th>
+                <th>Mã đặt tour</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let b of paginatedBookings">
+                <td>{{ b.id }}</td>
+                <td>{{ b.tourName }}</td>
+                <td>{{ b.bookingDate | date:'dd/MM/yyyy' }}</td>
+                <td>{{ b.total | number }} đ</td>
+                <td>{{ b.bookingCode }}</td>
+
+                <td>
+                    <span class="status" [ngClass]="getStatusClass(b.status)">
+                        {{ getStatusLabel(b.status) }}
+                    </span>
+                </td>
+
+                <td>
+                    <button *ngIf="b.status === 'PENDING' || b.status === 'APPROVED'" class="btn-cancel"
+                        (click)="cancelBooking(b.id)">
+                        Hủy
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination" *ngIf="totalPages > 1">
+        <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+            «
+        </button>
+        <button *ngFor="let page of pageNumbers" (click)="changePage(page)" [class.active]="page === currentPage">
+            {{ page }}
+        </button>
+        <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+            »
+        </button>
+    </div>
+
+    <div *ngIf="!loading && filteredBookings.length === 0" class="empty">
+        Không tìm thấy kết quả.
+    </div>
+
+</div>

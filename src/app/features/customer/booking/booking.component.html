@@ -1,13 +1,28 @@
 <div class="booking-container">
-    <h2>Đặt tour</h2>
+    <h2>Đặt Tour: {{ tour?.tourName }}</h2>
 
-    <form (ngSubmit)="submitBooking()">
-        <div>
-            <label for="quantity">Số lượng người:</label>
-            <input type="number" id="quantity" name="quantity" [(ngModel)]="quantity" min="1" required />
+    <div class="image-wrapper" *ngIf="tour?.img">
+        <img [src]="tour!.img" class="tour-image" />
+    </div>
+
+    <div class="tour-info" *ngIf="tour">
+        <p><strong>Giá vé:</strong> {{ tour.price | number }} VND</p>
+        <p><strong>Thời gian:</strong> {{ tour.startDate }} → {{ tour.endDate }}</p>
+        <p><strong>Số chỗ còn:</strong> {{ tour.quantity }}</p>
+    </div>
+
+    <form (ngSubmit)="submitBooking()" class="booking-form">
+        <div class="form-group">
+            <label>Số lượng người:</label>
+            <input type="number" [(ngModel)]="quantity" name="quantity" min="1" required />
         </div>
 
-        <button type="submit">
+        <div class="total">
+            <strong>Tổng tiền:</strong>
+            {{ (tour?.price || 0) * quantity | number }} VND
+        </div>
+
+        <button type="submit" class="btn-submit">
             Xác nhận đặt tour
         </button>
     </form>

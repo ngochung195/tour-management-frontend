@@ -1,37 +1,91 @@
-<h2>Quản lý Booking</h2>
+<div class="booking-wrapper">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Tour</th>
-            <th>Khách hàng</th>
-            <th>Số lượng</th>
-            <th>Tổng tiền</th>
-            <th>Ngày đặt</th>
-            <th>Trạng thái</th>
-            <th>Hành động</th>
-        </tr>
-    </thead>
+    <h2 class="title">Quản lý Booking</h2>
 
-    <tbody>
-        <tr *ngFor="let b of bookings">
-            <td>{{ b.id }}</td>
-            <td>{{ b.tour?.name }}</td>
-            <td>{{ b.user?.email }}</td>
-            <td>{{ b.quantity }}</td>
-            <td>{{ b.totalPrice | currency:'VND' }}</td>
-            <td>{{ b.bookingDate | date:'dd/MM/yyyy HH:mm' }}</td>
-            <td>{{ b.status }}</td>
-            <td>
-                <button *ngIf="b.status === 'PENDING'" (click)="updateStatus(b.id, 'APPROVED')">
-                    Duyệt
-                </button>
+    <div class="filter-form">
 
-                <button *ngIf="b.status === 'PENDING'" (click)="updateStatus(b.id, 'REJECTED')">
-                    Từ chối
-                </button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+        <input type="text" placeholder="Tìm theo tên tour..." [(ngModel)]="searchTour" />
+
+        <input type="text" placeholder="Tìm theo tên khách hàng..." [(ngModel)]="searchUser" />
+
+        <input type="date" [(ngModel)]="searchDate" />
+
+        <select [(ngModel)]="searchStatus">
+            <option value="">-- Trạng thái --</option>
+            <option value="PENDING">Chờ xử lý</option>
+            <option value="APPROVED">Đã xác nhận</option>
+            <option value="REJECTED">Bị từ chối</option>
+        </select>
+
+        <button class="btn-search" (click)="applyFilters()">
+            Tìm kiếm
+        </button>
+
+        <button class="btn-reset" (click)="resetFilters()">
+            Xóa lọc
+        </button>
+
+    </div>
+
+    <table class="table" *ngIf="pagedBookings.length > 0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tour</th>
+                <th>Khách hàng</th>
+                <th>Số lượng</th>
+                <th>Tổng tiền</th>
+                <th>Ngày đặt</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let b of pagedBookings">
+                <td>{{ b.id }}</td>
+                <td>{{ b.tourName }}</td>
+                <td>{{ b.userName }}</td>
+                <td>{{ b.quantity }}</td>
+                <td>{{ b.total | number }} đ</td>
+                <td>{{ b.bookingDate | date:'dd/MM/yyyy HH:mm' }}</td>
+
+                <td>
+                    <span class="status" [ngClass]="b.status.toLowerCase()">
+                        {{ getStatusLabel(b.status) }}
+                    </span>
+                </td>
+
+                <td>
+                    <button *ngIf="b.status === 'PENDING'" class="btn-approve" (click)="updateStatus(b.id, 'APPROVED')">
+                        Duyệt
+                    </button>
+
+                    <button *ngIf="b.status === 'PENDING'" class="btn-reject" (click)="updateStatus(b.id, 'REJECTED')">
+                        Từ chối
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="filteredBookings.length === 0" class="empty">
+        Không có booking nào.
+    </div>
+
+    <div class="pagination" *ngIf="totalPages > 1">
+
+        <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+            «
+        </button>
+
+        <button *ngFor="let page of pageNumbers" (click)="changePage(page)" [class.active]="currentPage === page">
+            {{ page }}
+        </button>
+
+        <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+            »
+        </button>
+
+    </div>
+</div>

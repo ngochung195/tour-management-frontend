@@ -16,15 +16,18 @@ export class CustomerLayoutComponent {
   ) { }
 
   onBookNow() {
-    if (!this.authService.isLoggedIn()) {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/tour-list']);
+    }
+    else {
       this.router.navigate(['/login']);
       return;
     }
-    this.router.navigate(['/customer/tour-list']);
+    this.router.navigate(['/tour-list']);
   }
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   }
 }

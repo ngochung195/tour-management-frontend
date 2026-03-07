@@ -1,11 +1,70 @@
-<div class="manager-layout">
+<header class="header">
+    <div class="container">
+        <div class="logo" routerLink="/manager/dashboard">
+            Travel<span>Go</span>
+        </div>
+
+        <div class="actions">
+            <button class="login" (click)="logout()">
+                Đăng xuất
+            </button>
+        </div>
+    </div>
+</header>
+
+
+<div class="manager-container">
+
     <aside class="sidebar">
-        <a routerLink="/manager/tours">Quản lý tour</a>
-        <a routerLink="/manager/bookings">Quản lý booking</a>
-        <a routerLink="/manager/categories">Quản lý danh mục</a>
+        <nav>
+
+            <a routerLink="/manager" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <i class="bi bi-speedometer2 icon"></i>
+                Dashboard
+            </a>
+
+            <div class="menu-group">
+
+                <div class="menu-title" (click)="toggleMenu()" [class.active]="isMenuOpen">
+
+                    <div>
+                        <i class="bi bi-folder2-open icon"></i>
+                        Danh mục quản lý
+                    </div>
+
+                    <i class="bi" [ngClass]="isMenuOpen ? 'bi-chevron-down' : 'bi-chevron-right'">
+                    </i>
+                </div>
+
+                <div class="submenu" [class.open]="isMenuOpen">
+
+                    <a routerLink="/manager/tours" routerLinkActive="active">
+                        <i class="bi bi-map icon"></i>
+                        Quản lý tour
+                    </a>
+
+                    <a routerLink="/manager/bookings" routerLinkActive="active">
+                        <i class="bi bi-ticket-perforated icon"></i>
+                        Quản lý booking
+                    </a>
+
+                    <a routerLink="/manager/categories" routerLinkActive="active">
+                        <i class="bi bi-tags icon"></i>
+                        Quản lý danh mục
+                    </a>
+
+                </div>
+
+            </div>
+
+        </nav>
     </aside>
 
-    <main>
-        <router-outlet></router-outlet>
-    </main>
+
+    <div class="main-content">
+        <section class="page-content">
+            <router-outlet></router-outlet>
+        </section>
+    </div>
+
 </div>

@@ -1,1 +1,74 @@
-<p>manager-category works!</p>
+<div class="categories-wrapper">
+
+    <h2 class="title">Quản lý Danh mục</h2>
+
+    <div class="filter-form">
+
+        <input type="text" placeholder="Tìm theo tên danh mục..." [(ngModel)]="searchName" name="searchName" />
+
+        <button class="btn-search" (click)="applyFilters()">
+            Tìm kiếm
+        </button>
+
+        <button class="btn-reset" (click)="resetFilters()">
+            Xóa lọc
+        </button>
+
+        <button class="btn btn-success btn-add" (click)="goToCreate()">
+            <i class="bi bi-plus-circle"></i> Thêm danh mục
+        </button>
+
+    </div>
+
+    <table class="table" *ngIf="pagedCategories.length > 0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên danh mục</th>
+                <th>Mô tả</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let c of pagedCategories">
+                <td>{{ c.id }}</td>
+                <td>{{ c.categoryName }}</td>
+                <td>{{ c.description }}</td>
+
+                <td class="action-buttons">
+
+                    <button class="icon-btn edit-btn" (click)="goToEdit(c.id)" title="Chỉnh sửa">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+
+                    <button class="icon-btn delete-btn" (click)="deleteCategory(c.id)" title="Xóa">
+                        <i class="bi bi-trash"></i>
+                    </button>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="filteredCategories.length === 0" class="empty">
+        Không có danh mục nào.
+    </div>
+
+    <div class="pagination" *ngIf="totalPages > 1">
+
+        <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+            «
+        </button>
+
+        <button *ngFor="let page of pageNumbers" (click)="changePage(page)" [class.active]="currentPage === page">
+            {{ page }}
+        </button>
+
+        <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+            »
+        </button>
+
+    </div>
+
+</div>

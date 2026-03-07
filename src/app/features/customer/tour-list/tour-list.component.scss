@@ -1,17 +1,93 @@
+.page-title {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 22px;
+    color: #1f2937;
+}
+
 .tour-list {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 16px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
 }
 
 .tour-card {
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+}
 
-    img {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-    }
+.tour-card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.image-box {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+}
+
+.image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.tour-card:hover img {
+    transform: scale(1.05);
+}
+
+.content {
+    padding: 10px;
+}
+
+.title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tour-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+    max-width: 65%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.price {
+    font-size: 14px;
+    font-weight: 600;
+    color: #f97316;
+    white-space: nowrap;
+}
+
+.date {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 6px 0;
+}
+
+.btn-book {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    background: #fed7aa;
+    color: #7c2d12;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-book:hover {
+    background: #fdba74;
 }

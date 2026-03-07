@@ -1,0 +1,220 @@
+.tour-wrapper {
+    padding: 24px;
+}
+
+.title {
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #1e3a8a;
+}
+
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.filter-form input,
+.filter-form select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.filter-form label {
+    margin-right: 6px;
+}
+
+.btn-search {
+    background: #1e3a8a;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-search:hover {
+    background: #1d4ed8;
+}
+
+.btn-reset {
+    background: #6b7280;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-reset:hover {
+    background: #4b5563;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.table thead {
+    background: #1e3a8a;
+    color: white;
+}
+
+.status {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.approved {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.rejected {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.btn-approve {
+    background: #16a34a;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.btn-reject {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.empty {
+    text-align: center;
+    margin-top: 20px;
+    color: #777;
+}
+
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    align-items: center;
+}
+
+.pagination button {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.pagination button:hover:not(:disabled) {
+    background: #f3f4f6;
+    color: #000;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination button.active {
+    background: #1e3a8a;
+    color: white;
+    border-color: #1e3a8a;
+}
+
+.btn-add {
+    margin-left: auto;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #fff;
+    border: none !important;
+    outline: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-weight: 500;
+    transition: all 0.25s ease;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(34, 197, 94, 0.3);
+}
+
+.btn-success:focus,
+.btn-success:active {
+    outline: none;
+    box-shadow: none;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.icon-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 16px;
+}
+
+.edit-btn {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.edit-btn:hover {
+    background-color: #3b82f6;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.delete-btn {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.delete-btn:hover {
+    background-color: #ef4444;
+    color: #fff;
+    transform: scale(1.1);
+}
