@@ -1,0 +1,91 @@
+<div class="tour-admin-wrapper">
+
+    <h2 class="title">Quản lý Tour</h2>
+
+    <div class="filter-form">
+
+        <input type="text" placeholder="Tìm theo tên tour..." [(ngModel)]="searchName" />
+
+        <div class="date-group">
+            <label>Từ ngày</label>
+            <input type="date" [(ngModel)]="searchStartDate" name="searchStartDate" />
+        </div>
+
+        <div class="date-group">
+            <label>Đến ngày</label>
+            <input type="date" [(ngModel)]="searchEndDate" name="searchEndDate" />
+        </div>
+
+        <button class="btn-search" (click)="applyFilters()">
+            Tìm kiếm
+        </button>
+
+        <button class="btn-reset" (click)="resetFilters()">
+            Xóa lọc
+        </button>
+
+        <button class="btn btn-success btn-add" (click)="goToCreate()">
+            <i class="bi bi-plus-circle"></i> Thêm Tour
+        </button>
+
+    </div>
+
+    <table class="table" *ngIf="pagedTours.length > 0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên tour</th>
+                <th>Danh mục</th>
+                <th>Số lượng</th>
+                <th>Giá</th>
+                <th>Ngày bắt đầu</th>
+                <th>Ngày kết thúc</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let t of pagedTours">
+                <td>{{ t.id }}</td>
+                <td>{{ t.tourName }}</td>
+                <td>{{ t.categoryName }}</td>
+                <td>{{ t.quantity }}</td>
+                <td>{{ t.price | number }} đ</td>
+                <td>{{ t.startDate | date:'dd/MM/yyyy' }}</td>
+                <td>{{ t.endDate | date:'dd/MM/yyyy' }}</td>
+                <td class="action-buttons">
+
+                    <button class="icon-btn edit-btn" (click)="goToEdit(t.id)" title="Chỉnh sửa">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+
+                    <button class="icon-btn delete-btn" (click)="deleteTour(t.id)" title="Xóa">
+                        <i class="bi bi-trash"></i>
+                    </button>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="filteredTours.length === 0" class="empty">
+        Không có tour nào.
+    </div>
+
+    <div class="pagination" *ngIf="totalPages > 1">
+
+        <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+            «
+        </button>
+
+        <button *ngFor="let page of pageNumbers" (click)="changePage(page)" [class.active]="currentPage === page">
+            {{ page }}
+        </button>
+
+        <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+            »
+        </button>
+
+    </div>
+
+</div>

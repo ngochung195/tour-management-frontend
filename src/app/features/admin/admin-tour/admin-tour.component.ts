@@ -1,27 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ManagerCategoryService } from '../../../services/category.service';
+import { TourService } from '../../../services/tour.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
-import { Category } from '../../../models/category.model.';
+import { Tour } from '../../../models/tour.model';
 
 @Component({
-  selector: 'app-manager-category',
+  selector: 'app-admin-tour',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './manager-category.component.html',
-  styleUrl: './manager-category.component.scss'
+  templateUrl: './admin-tour.component.html',
+  styleUrl: './admin-tour.component.scss'
 })
-export class ManagerCategoryComponent {
-  categories: Category[] = [];
-  filteredCategories: Category[] = [];
-  pagedCategories: Category[] = [];
+export class AdminTourComponent {
+  tours: Tour[] = [];
+  filteredTours: Tour[] = [];
+  pagedTours: Tour[] = [];
 
   searchName: string = '';
   searchStartDate: string = '';
-  searchEndDate: String = '';
+  searchEndDate: string = '';
 
   currentPage = 1;
   pageSize = 5;
@@ -29,37 +29,41 @@ export class ManagerCategoryComponent {
   pageNumbers: number[] = [];
 
   constructor(
-    private managerCategoryService: ManagerCategoryService,
+    private tourService: TourService,
     private toastr: ToastrService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.loadCategories();
+    this.loadTours();
   }
 
-  loadCategories() {
-    this.managerCategoryService.getAllCategories().subscribe(res => {
-      this.categories = res;
+  loadTours() {
+    this.tourService.getAll().subscribe(res => {
+      this.tours = res;
       this.applyFilters();
     });
   }
 
   applyFilters() {
-    this.filteredCategories = this.categories.filter(c => {
-      return (!this.searchName || c.categoryName.toLowerCase().includes(this.searchName.toLocaleLowerCase()));
+    this.filteredTours = this.tours.filter(t => {
+      return (
+        (!this.searchName || t.tourName.toLowerCase().includes(this.searchName.toLocaleLowerCase())) &&
+        (!this.searchStartDate || t.startDate === this.searchStartDate) &&
+        (!this.searchEndDate || t.endDate === this.searchEndDate)
+      );
     });
     this.currentPage = 1;
     this.updatePagination();
   }
 
   updatePagination() {
-    this.totalPages = Math.ceil(this.filteredCategories.length / this.pageSize);
+    this.totalPages = Math.ceil(this.filteredTours.length / this.pageSize);
     this.pageNumbers = Array.from({ length: this.totalPages }, (_, i) => i + 1);
 
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
-    this.pagedCategories = this.filteredCategories.slice(start, end);
+    this.pagedTours = this.filteredTours.slice(start, end);
   }
 
   resetFilters() {
@@ -76,16 +80,16 @@ export class ManagerCategoryComponent {
   }
 
   goToCreate() {
-    this.router.navigate(['/manager/categories/create']);
+    this.router.navigate(['/admin/tours/create']);
   }
 
   goToEdit(id: number) {
-    this.router.navigate(['/manager/categories/edit', id]);
+    this.router.navigate(['/admin/tours/edit', id]);
   }
 
-  deleteCategory(id: number) {
+  deleteTour(id: number) {
     Swal.fire({
-      title: 'Bạn có chắc chắn xóa danh mục?',
+      title: 'Bạn có chắc chắn xóa tour?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Xóa',
@@ -97,16 +101,16 @@ export class ManagerCategoryComponent {
 
       if (result.isConfirmed) {
 
-        this.managerCategoryService.deleteCategory(id).subscribe({
+        this.tourService.deleteTour(id).subscribe({
 
           next: () => {
-            this.toastr.success('Xóa danh mục thành công', 'Thành công');
-            this.loadCategories();
+            this.toastr.success('Xóa tour thành công', 'Thành công');
+            this.loadTours();
           },
 
           error: (err) => {
             this.toastr.error(
-              err?.error?.message || 'Không thể xóa danh mục',
+              err?.error?.message || 'Không thể xóa tour',
               'Lỗi'
             );
           }

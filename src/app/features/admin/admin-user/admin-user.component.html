@@ -1,0 +1,75 @@
+<div class="tour-admin-wrapper">
+
+    <h2 class="title">Quản lý Người dùng</h2>
+
+    <div class="filter-form">
+
+        <input type="text" placeholder="Tìm theo tên..." [(ngModel)]="searchName" />
+
+        <button class="btn-search" (click)="applyFilters()">
+            Tìm kiếm
+        </button>
+
+        <button class="btn-reset" (click)="resetFilters()">
+            Xóa lọc
+        </button>
+
+        <button class="btn btn-success btn-add" (click)="goToCreate()">
+            <i class="bi bi-plus-circle"></i> Thêm người dùng
+        </button>
+
+    </div>
+
+    <table class="table" *ngIf="pagedUsers.length > 0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên người dùng</th>
+                <th>Email</th>
+                <th>Vai trò</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let u of pagedUsers">
+                <td>{{ u.id }}</td>
+                <td>{{ u.userName }}</td>
+                <td>{{ u.email }}</td>
+                <td>{{ u.roleName }}</td>
+                <td class="action-buttons">
+
+                    <button class="icon-btn edit-btn" (click)="goToEdit(u.id)" title="Chỉnh sửa">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+
+                    <button class="icon-btn delete-btn" (click)="deleteUser(u.id)" title="Xóa">
+                        <i class="bi bi-trash"></i>
+                    </button>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="filteredUsers.length === 0" class="empty">
+        Không có tour nào.
+    </div>
+
+    <div class="pagination" *ngIf="totalPages > 1">
+
+        <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+            «
+        </button>
+
+        <button *ngFor="let page of pageNumbers" (click)="changePage(page)" [class.active]="currentPage === page">
+            {{ page }}
+        </button>
+
+        <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+            »
+        </button>
+
+    </div>
+
+</div>

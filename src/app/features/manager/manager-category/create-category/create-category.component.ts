@@ -2,17 +2,17 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ManagerCategoryService } from '../../../../services/manager-category.service';
+import { ManagerCategoryService } from '../../../../services/category.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-create-category',
+  selector: 'app-manager-create-category',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './create-category.component.html',
   styleUrl: './create-category.component.scss'
 })
-export class CreateCategoryComponent {
+export class ManagerCreateCategoryComponent {
   category: any = {
     categoryName: '',
     decription: ''

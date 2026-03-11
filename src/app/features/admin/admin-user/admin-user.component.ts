@@ -1,71 +1,70 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ManagerCategoryService } from '../../../services/category.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
-import { Category } from '../../../models/category.model.';
+import { User } from '../../../models/user.model';
+import { UserService } from '../../../services/user.service';
+
 
 @Component({
-  selector: 'app-manager-category',
+  selector: 'app-admin-user',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './manager-category.component.html',
-  styleUrl: './manager-category.component.scss'
+  templateUrl: './admin-user.component.html',
+  styleUrl: './admin-user.component.scss'
 })
-export class ManagerCategoryComponent {
-  categories: Category[] = [];
-  filteredCategories: Category[] = [];
-  pagedCategories: Category[] = [];
+export class AdminUserComponent {
+  users: User[] = [];
+  filteredUsers: User[] = [];
+  pagedUsers: User[] = [];
 
   searchName: string = '';
-  searchStartDate: string = '';
-  searchEndDate: String = '';
 
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 10;
   totalPages = 0;
   pageNumbers: number[] = [];
 
   constructor(
-    private managerCategoryService: ManagerCategoryService,
+    private userService: UserService,
     private toastr: ToastrService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.loadCategories();
+    this.loadUsers();
   }
 
-  loadCategories() {
-    this.managerCategoryService.getAllCategories().subscribe(res => {
-      this.categories = res;
+  loadUsers() {
+    this.userService.getAll().subscribe(res => {
+      this.users = res;
       this.applyFilters();
     });
   }
 
   applyFilters() {
-    this.filteredCategories = this.categories.filter(c => {
-      return (!this.searchName || c.categoryName.toLowerCase().includes(this.searchName.toLocaleLowerCase()));
+    this.filteredUsers = this.users.filter(u => {
+      return (
+        (!this.searchName || u.userName.toLowerCase().includes(this.searchName.toLocaleLowerCase()))
+      );
     });
     this.currentPage = 1;
     this.updatePagination();
   }
 
   updatePagination() {
-    this.totalPages = Math.ceil(this.filteredCategories.length / this.pageSize);
+    this.totalPages = Math.ceil(this.filteredUsers.length / this.pageSize);
     this.pageNumbers = Array.from({ length: this.totalPages }, (_, i) => i + 1);
 
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
-    this.pagedCategories = this.filteredCategories.slice(start, end);
+    this.pagedUsers = this.filteredUsers.slice(start, end);
   }
 
   resetFilters() {
     this.searchName = '';
-    this.searchStartDate = '';
-    this.searchEndDate = '';
     this.applyFilters();
   }
 
@@ -76,16 +75,16 @@ export class ManagerCategoryComponent {
   }
 
   goToCreate() {
-    this.router.navigate(['/manager/categories/create']);
+    this.router.navigate(['/admin/users/create']);
   }
 
   goToEdit(id: number) {
-    this.router.navigate(['/manager/categories/edit', id]);
+    this.router.navigate(['/admin/users/edit', id]);
   }
 
-  deleteCategory(id: number) {
+  deleteUser(id: number) {
     Swal.fire({
-      title: 'Bạn có chắc chắn xóa danh mục?',
+      title: 'Bạn có chắc chắn xóa người dùng?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Xóa',
@@ -97,16 +96,16 @@ export class ManagerCategoryComponent {
 
       if (result.isConfirmed) {
 
-        this.managerCategoryService.deleteCategory(id).subscribe({
+        this.userService.deleteUser(id).subscribe({
 
           next: () => {
-            this.toastr.success('Xóa danh mục thành công', 'Thành công');
-            this.loadCategories();
+            this.toastr.success('Xóa người dùng thành công', 'Thành công');
+            this.loadUsers();
           },
 
           error: (err) => {
             this.toastr.error(
-              err?.error?.message || 'Không thể xóa danh mục',
+              err?.error?.message || 'Không thể xóa người dùng',
               'Lỗi'
             );
           }

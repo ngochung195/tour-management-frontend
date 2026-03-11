@@ -6,12 +6,12 @@ import { TourService } from '../../../../services/tour.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-manager-create-tour',
+  selector: 'app-admin-create-tour',
   imports: [CommonModule, FormsModule],
   templateUrl: './create-tour.component.html',
   styleUrl: './create-tour.component.scss'
 })
-export class ManagerCreateTourComponent {
+export class AdminCreateTourComponent {
   tour: any = {
     tourName: '',
     categoryId: null,
@@ -32,7 +32,7 @@ export class ManagerCreateTourComponent {
     this.tourService.createTour(this.tour).subscribe({
       next: () => {
         this.toastr.success('Thêm tour thành công');
-        this.router.navigate(['/manager/tours']);
+        this.router.navigate(['/admin/tours']);
       },
       error: (err) => {
         this.toastr.error(err?.error?.message || "Thêm tour thất bại")
@@ -41,7 +41,7 @@ export class ManagerCreateTourComponent {
   }
 
   goBack() {
-    this.router.navigate(['/manager/tours']);
+    this.router.navigate(['/admin/tours']);
   }
 
   categories: any[] = [];

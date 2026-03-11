@@ -7,13 +7,13 @@ import { ToastrService } from 'ngx-toastr';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-manager-edit-tour',
+  selector: 'app-admin-edit-tour',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './edit-tour.component.html',
   styleUrl: './edit-tour.component.scss'
 })
-export class ManagerEditTourComponent implements OnInit {
+export class AdminEditTourComponent implements OnInit {
 
   tour: any = {};
 
@@ -39,7 +39,7 @@ export class ManagerEditTourComponent implements OnInit {
     this.tourService.updateTour(this.tour.id, this.tour).subscribe({
       next: () => {
         this.toastr.success('Cập nhật thành công');
-        this.router.navigate(['/manager/tours']);
+        this.router.navigate(['/admin/tours']);
       },
       error: (err) => {
         this.toastr.error(err?.error?.message || 'Cập nhật thất bại');

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ManagerCategoryService } from './manager-category.service';
+import { ManagerCategoryService } from './category.service';
 
 describe('ManagerCategoryService', () => {
   let service: ManagerCategoryService;

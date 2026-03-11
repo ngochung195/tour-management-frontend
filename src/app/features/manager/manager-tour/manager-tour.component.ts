@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ManagerTourService } from '../../../services/manager-tour.service';
+import { TourService } from '../../../services/tour.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
@@ -28,7 +28,7 @@ export class ManagerTourComponent {
   pageNumbers: number[] = [];
 
   constructor(
-    private managerTourService: ManagerTourService,
+    private tourService: TourService,
     private toastr: ToastrService,
     private router: Router
   ) { }
@@ -38,7 +38,7 @@ export class ManagerTourComponent {
   }
 
   loadTours() {
-    this.managerTourService.getAllTours().subscribe(res => {
+    this.tourService.getAll().subscribe(res => {
       this.tours = res;
       this.applyFilters();
     });
@@ -100,7 +100,7 @@ export class ManagerTourComponent {
 
       if (result.isConfirmed) {
 
-        this.managerTourService.deleteTour(id).subscribe({
+        this.tourService.deleteTour(id).subscribe({
 
           next: () => {
             this.toastr.success('Xóa tour thành công', 'Thành công');
