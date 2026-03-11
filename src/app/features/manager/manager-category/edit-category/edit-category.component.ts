@@ -3,17 +3,17 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
-import { Toast, ToastrService } from 'ngx-toastr';
-import { ManagerCategoryService } from '../../../../services/manager-category.service';
+import { ToastrService } from 'ngx-toastr';
+import { ManagerCategoryService } from '../../../../services/category.service';
 
 
 @Component({
-  selector: 'app-edit-category',
+  selector: 'app-manager-edit-category',
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './edit-category.component.html',
   styleUrl: './edit-category.component.scss'
 })
-export class EditCategoryComponent implements OnInit {
+export class ManagerEditCategoryComponent implements OnInit {
   category: any = {};
 
   constructor(

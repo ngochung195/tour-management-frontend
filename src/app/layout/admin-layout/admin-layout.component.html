@@ -1,6 +1,6 @@
 <header class="header">
     <div class="container">
-        <div class="logo" routerLink="/manager">
+        <div class="logo" routerLink="/admin">
             Travel<span>Go</span>
         </div>
 
@@ -13,12 +13,12 @@
 </header>
 
 
-<div class="manager-container">
+<div class="admin-container">
 
     <aside class="sidebar">
         <nav>
 
-            <a routerLink="/manager" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                 <i class="bi bi-speedometer2 icon"></i>
                 Dashboard
             </a>
@@ -37,22 +37,20 @@
                 </div>
 
                 <div class="submenu" [class.open]="isMenuOpen">
+                    <a routerLink="/admin/users" routerLinkActive="active">
+                        <i class="bi bi-person icon"></i>
+                        Quản lý người dùng
+                    </a>
 
-                    <a routerLink="/manager/tours" routerLinkActive="active">
+                    <a routerLink="/admin/tours" routerLinkActive="active">
                         <i class="bi bi-map icon"></i>
                         Quản lý tour
                     </a>
 
-                    <a routerLink="/manager/bookings" routerLinkActive="active">
+                    <a routerLink="/admin/bookings" routerLinkActive="active">
                         <i class="bi bi-ticket-perforated icon"></i>
                         Quản lý booking
                     </a>
-
-                    <a routerLink="/manager/categories" routerLinkActive="active">
-                        <i class="bi bi-tags icon"></i>
-                        Quản lý danh mục
-                    </a>
-
                 </div>
 
             </div>

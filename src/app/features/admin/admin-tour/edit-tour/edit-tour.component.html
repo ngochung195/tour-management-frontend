@@ -1,0 +1,57 @@
+<div class="edit-container">
+    <h2>Chỉnh sửa Tour</h2>
+
+    <form (ngSubmit)="updateTour()" *ngIf="tour">
+
+        <div class="form-group">
+            <label>Tên tour</label>
+            <input type="text" [(ngModel)]="tour.tourName" name="tourName" required>
+        </div>
+
+        <div class="form-group">
+            <label>Danh mục</label>
+            <select [(ngModel)]="tour.categoryId" name="categoryId" required>
+                <option [ngValue]="null">Chọn danh mục</option>
+                <option *ngFor="let c of categories" [ngValue]="c.id">
+                    {{ c.categoryName }}
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Số lượng</label>
+            <input type="number" [(ngModel)]="tour.quantity" name="quantity" required>
+        </div>
+
+        <div class="form-group">
+            <label>Giá</label>
+            <input type="number" [(ngModel)]="tour.price" name="price" required>
+        </div>
+
+        <div class="form-group">
+            <label>Ngày bắt đầu</label>
+            <input type="date" [(ngModel)]="tour.startDate" name="startDate">
+        </div>
+
+        <div class="form-group">
+            <label>Ngày kết thúc</label>
+            <input type="date" [(ngModel)]="tour.endDate" name="endDate">
+        </div>
+
+        <div class="form-group">
+            <label>Mô tả</label>
+            <textarea [(ngModel)]="tour.description" name="description"></textarea>
+        </div>
+
+        <div class="btn-group">
+            <button type="button" class="btn-secondary" routerLink="/admin/tours">
+                Hủy
+            </button>
+
+            <button type="submit" class="btn-primary">
+                Cập nhật
+            </button>
+        </div>
+
+    </form>
+</div>

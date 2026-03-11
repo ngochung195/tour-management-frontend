@@ -19,7 +19,7 @@
     color: #555;
 }
 
-.back-home {
+.come-back {
     padding: 12px 22px;
     background-color: #1976d2;
     color: #fff;
@@ -40,16 +40,16 @@
         transform 0.1s ease;
 }
 
-.back-home:hover {
+.come-back:hover {
     background-color: #125aa0;
 }
 
-.back-home:active {
+.come-back:active {
     transform: scale(0.97);
 }
 
-.back-home:focus,
-.back-home:focus-visible {
+.come-back:focus,
+.come-back:focus-visible {
     outline: none;
     box-shadow: none;
 }

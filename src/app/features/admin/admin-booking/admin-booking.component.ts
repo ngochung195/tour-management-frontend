@@ -3,16 +3,18 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BookingService } from '../../../services/booking.service';
 import { Booking } from '../../../models/booking.model';
+import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
+
 
 @Component({
-  selector: 'app-manager-booking',
+  selector: 'app-admin-booking',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './manager-booking.component.html',
-  styleUrl: './manager-booking.component.scss'
+  templateUrl: './admin-booking.component.html',
+  styleUrl: './admin-booking.component.scss'
 })
-export class ManagerBookingComponent implements OnInit {
-
+export class AdminBookingComponent implements OnInit {
   bookings: Booking[] = [];
   filteredBookings: Booking[] = [];
   pagedBookings: Booking[] = [];
@@ -27,7 +29,10 @@ export class ManagerBookingComponent implements OnInit {
   itemsPerPage = 10;
   totalPages = 0;
 
-  constructor(private BookingService: BookingService) { }
+  constructor(
+    private BookingService: BookingService,
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit(): void {
     this.loadBookings();
@@ -42,9 +47,38 @@ export class ManagerBookingComponent implements OnInit {
     });
   }
 
-  updateStatus(id: number, status: string) {
-    this.BookingService.updateStatus(id, status).subscribe(() => {
-      this.loadBookings();
+  deleteBooking(id: number) {
+    Swal.fire({
+      title: 'Bạn có chắc chắn xóa booking?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Hủy',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      reverseButtons: true
+    }).then((result) => {
+
+      if (result.isConfirmed) {
+
+        this.BookingService.deleteBooking(id).subscribe({
+
+          next: () => {
+            this.toastr.success('Xóa booking thành công', 'Thành công');
+            this.loadBookings();
+          },
+
+          error: (err) => {
+            this.toastr.error(
+              err?.error?.message || 'Không thể xóa booking',
+              'Lỗi'
+            );
+          }
+
+        });
+
+      }
+
     });
   }
 

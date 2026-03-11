@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,9 +11,13 @@ import { Router } from '@angular/router';
 })
 export class ForbiddenComponent {
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private location: Location
+  ) { }
 
-  goHome() {
-    this.router.navigate(['/']);
+  comeBack() {
+    this.location.back();
   }
+
 }

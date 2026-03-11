@@ -19,4 +19,22 @@ export class TourService {
     getById(id: number): Observable<Tour> {
         return this.http.get<Tour>(`${this.api}/${id}`);
     }
+
+    createTour(data: Tour) {
+        return this.http.post(this.api, data);
+    }
+
+    updateTour(id: number, tour: Tour) {
+        return this.http.put(`${this.api}/${id}`, tour);
+    }
+
+    deleteTour(id: number) {
+        return this.http.delete(`${this.api}/${id}`, {
+            responseType: 'text'
+        });
+    }
+
+    getCategories() {
+        return this.http.get<any[]>('http://localhost:8080/api/categories');
+    }
 }

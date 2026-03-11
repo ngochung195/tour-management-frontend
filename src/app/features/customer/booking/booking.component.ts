@@ -55,7 +55,7 @@ export class BookingComponent implements OnInit {
           'Thành công'
         );
 
-        this.router.navigate(['/']);
+        this.router.navigate(['/tour-list']);
       },
       error: (err) => {
         console.error('BOOKING ERROR:', err);
