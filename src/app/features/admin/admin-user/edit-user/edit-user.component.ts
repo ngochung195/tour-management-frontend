@@ -47,9 +47,18 @@ export class EditUserComponent implements OnInit {
     console.log(this.user);
 
     this.userService.updateUser(this.user.id, this.user).subscribe({
-      next: () => {
+      next: (res) => {
         this.toastr.success('Cập nhật người dùng thành công');
-        this.router.navigate(['/admin/users']);
+
+        if (res.needRelogin) {
+          this.toastr.warning('Vai trò đã thay đổi. Vui lòng đăng nhập lại.');
+          localStorage.removeItem("token");
+
+          this.router.navigate(['/login']);
+        } else {
+
+          this.router.navigate(['/admin/users']);
+        }
       },
       error: (err) => {
         this.toastr.error(err?.error?.message || 'Cập nhật người dùng thất bại');

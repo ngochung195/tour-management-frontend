@@ -7,4 +7,5 @@ export interface User {
     dateOfBirth: string;
     phone: string;
     address: string;
+    needRelogin: boolean;
 }
