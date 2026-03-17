@@ -7,16 +7,16 @@
         <input type="text" placeholder="Tìm theo tên tour..." [(ngModel)]="searchName" />
 
         <div class="date-group">
-            <label>Từ ngày</label>
+            <label>Ngày bắt đầu</label>
             <input type="date" [(ngModel)]="searchStartDate" name="searchStartDate" />
         </div>
 
         <div class="date-group">
-            <label>Đến ngày</label>
+            <label>Ngày kết thúc</label>
             <input type="date" [(ngModel)]="searchEndDate" name="searchEndDate" />
         </div>
 
-        <button class="btn-search" (click)="applyFilters()">
+        <button class="btn-search" (click)="searchTour()">
             Tìm kiếm
         </button>
 

@@ -41,19 +41,20 @@ export class AdminUserComponent {
   loadUsers() {
     this.userService.getAll().subscribe(res => {
       this.users = res;
-      this.applyFilters();
+      this.filteredUsers = res;
+      this.currentPage = 1;
+      this.updatePagination();
     });
   }
 
-  applyFilters() {
-    this.filteredUsers = this.users.filter(u => {
-      return (
-        (!this.searchName || u.userName.toLowerCase().includes(this.searchName.toLocaleLowerCase())) &&
-        (!this.searchRole || u.roleName.toLowerCase().includes(this.searchRole.toLocaleLowerCase()))
-      );
-    });
-    this.currentPage = 1;
-    this.updatePagination();
+  searchUsers(){
+    this.userService
+      .searchUsers(this.searchName, this.searchRole)
+      .subscribe(res => {
+        this.filteredUsers = res;
+        this.currentPage = 1;
+        this.updatePagination();
+      });
   }
 
   updatePagination() {
@@ -68,7 +69,7 @@ export class AdminUserComponent {
   resetFilters() {
     this.searchName = '';
     this.searchRole = '';
-    this.applyFilters();
+    this.loadUsers();
   }
 
   changePage(page: number) {
