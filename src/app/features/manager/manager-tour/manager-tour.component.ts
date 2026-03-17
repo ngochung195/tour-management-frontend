@@ -40,21 +40,21 @@ export class ManagerTourComponent {
   loadTours() {
     this.tourService.getAll().subscribe(res => {
       this.tours = res;
-      this.applyFilters();
+      this.filteredTours = res;
+      this.currentPage = 1;
+      this.updatePagination();
     });
   }
 
-  applyFilters() {
-    this.filteredTours = this.tours.filter(t => {
-      return (
-        (!this.searchName || t.tourName.toLowerCase().includes(this.searchName.toLocaleLowerCase())) &&
-        (!this.searchStartDate || t.startDate === this.searchStartDate) &&
-        (!this.searchEndDate || t.endDate === this.searchEndDate)
-      );
-    });
-    this.currentPage = 1;
-    this.updatePagination();
-  }
+ searchTour(){
+    this.tourService
+        .searchTour(this.searchName, this.searchStartDate, this.searchEndDate)
+      .subscribe(res =>{
+        this.filteredTours = res;
+        this.currentPage = 1;
+        this.updatePagination();
+      });
+ }
 
   updatePagination() {
     this.totalPages = Math.ceil(this.filteredTours.length / this.pageSize);
@@ -69,7 +69,7 @@ export class ManagerTourComponent {
     this.searchName = '';
     this.searchStartDate = '';
     this.searchEndDate = '';
-    this.applyFilters();
+    this.loadTours();
   }
 
   changePage(page: number) {

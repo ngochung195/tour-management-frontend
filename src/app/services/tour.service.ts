@@ -20,6 +20,16 @@ export class TourService {
         return this.http.get<Tour>(`${this.api}/${id}`);
     }
 
+    searchTour(keyword?: string, startDate?: string, endDate?: string){
+      let params: any = {};
+
+      if (keyword) params.keyword = keyword;
+      if (startDate) params.startDate = startDate;
+      if (endDate) params.endDate = endDate;
+
+      return this.http.get<Tour[]>(`${this.api}/search-tour`, {params});
+    }
+
     createTour(data: Tour) {
         return this.http.post(this.api, data);
     }

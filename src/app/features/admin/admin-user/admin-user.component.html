@@ -6,9 +6,14 @@
 
       <input type="text" placeholder="Tìm theo tên..." [(ngModel)]="searchName" />
 
-      <input type="text" placeholder="Tìm theo vai trò.." [(ngModel)]="searchRole" />
+      <select class="role-select" [(ngModel)]="searchRole">
+        <option value="">Chọn vai trò</option>
+        <option value="ROLE_ADMIN">Admin</option>
+        <option value="ROLE_MANAGER">Manager</option>
+        <option value="ROLE_CUSTOMER">Customer</option>
+      </select>
 
-      <button class="btn-search" (click)="applyFilters()">
+      <button class="btn-search" (click)="searchUsers()">
             Tìm kiếm
         </button>
 
@@ -22,7 +27,7 @@
 
     </div>
 
-    <table class="table" *ngIf="pagedUsers.length > 0">
+    <table class="table" *ngIf="filteredUsers.length > 0">
         <thead>
             <tr>
                 <th>ID</th>
