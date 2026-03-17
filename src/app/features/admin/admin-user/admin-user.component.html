@@ -4,9 +4,11 @@
 
     <div class="filter-form">
 
-        <input type="text" placeholder="Tìm theo tên..." [(ngModel)]="searchName" />
+      <input type="text" placeholder="Tìm theo tên..." [(ngModel)]="searchName" />
 
-        <button class="btn-search" (click)="applyFilters()">
+      <input type="text" placeholder="Tìm theo vai trò.." [(ngModel)]="searchRole" />
+
+      <button class="btn-search" (click)="applyFilters()">
             Tìm kiếm
         </button>
 
