@@ -21,6 +21,7 @@ export class AdminUserComponent {
   pagedUsers: User[] = [];
 
   searchName: string = '';
+  searchRole: string = '';
 
   currentPage = 1;
   pageSize = 10;
@@ -47,7 +48,8 @@ export class AdminUserComponent {
   applyFilters() {
     this.filteredUsers = this.users.filter(u => {
       return (
-        (!this.searchName || u.userName.toLowerCase().includes(this.searchName.toLocaleLowerCase()))
+        (!this.searchName || u.userName.toLowerCase().includes(this.searchName.toLocaleLowerCase())) &&
+        (!this.searchRole || u.roleName.toLowerCase().includes(this.searchRole.toLocaleLowerCase()))
       );
     });
     this.currentPage = 1;
@@ -65,6 +67,7 @@ export class AdminUserComponent {
 
   resetFilters() {
     this.searchName = '';
+    this.searchRole = '';
     this.applyFilters();
   }
 
