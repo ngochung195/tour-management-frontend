@@ -8,25 +8,85 @@
             <a routerLink="/tour-list"> Danh sách tour </a>
             <a routerLink="/my-bookings"> Tour đặt </a>
 
-            <a href="#">Khuyến mãi</a>
-            <a href="#">Liên hệ</a>
+<!--            <a href="#">Khuyến mãi</a>-->
+<!--            <a href="#">Liên hệ</a>-->
         </nav>
 
         <div class="actions">
 
-            <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
-                <a routerLink="/register" class="login">Đăng ký</a>
-                <a routerLink="/login" class="login">Đăng nhập</a>
-            </ng-container>
+          <button class="btn-primary" (click)="onBookNow()">Đặt ngay</button>
 
-            <ng-template #loggedIn>
-                <button class="login" (click)="logout()">Đăng xuất</button>
-            </ng-template>
+          <div class="user-box" #dropdownRef (click)="toggleDropdown(); $event.stopPropagation()">
+            <img [src]="getAvatar()" class="avatar">
 
-            <button class="btn-primary" (click)="onBookNow()">Đặt ngay</button>
+            <span class="username">
+             {{ authService.isLoggedIn() ? getUsername() : 'Tài khoản' }}
+            </span>
+
+            <i class="bi bi-chevron-down arrow"></i>
+
+            <div class="dropdown" *ngIf="showDropdown">
+
+              <ng-container *ngIf="!authService.isLoggedIn(); else loggedMenu">
+
+                <button routerLink="/login">Đăng nhập</button>
+                <button routerLink="/register">Đăng ký</button>
+
+              </ng-container>
+
+              <ng-template #loggedMenu>
+
+                <p routerLink="users/me">Hồ sơ của tôi</p>
+                <p (click)="logout()">Đăng xuất</p>
+
+              </ng-template>
+
+            </div>
+
+          </div>
 
         </div>
     </div>
 </header>
 
 <router-outlet></router-outlet>
+
+<footer class="footer">
+  <div class="footer-container">
+
+    <div class="footer-col">
+      <p>
+        Đặt chuyến đi trong phút chốc,<br>
+        kiểm soát hoàn toàn trong thời gian dài hơn.
+      </p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Công ty</h4>
+      <a href="#">Về chúng tôi</a>
+      <a href="#">Chăm sóc</a>
+      <a href="#">Điện thoại</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Liên hệ</h4>
+      <a href="#">Hỗ trợ</a>
+      <a href="#">Liên kết</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Thêm</h4>
+      <a href="#">Phí hàng không</a>
+      <a href="#">Hãng hàng không</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Khám phá ứng dụng</h4>
+      <div class="app-buttons">
+        <img src="/gg_play.png" alt="Google Play">
+        <img src="/app.png" alt="App Store">
+      </div>
+    </div>
+
+  </div>
+</footer>

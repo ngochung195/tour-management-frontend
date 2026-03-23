@@ -47,6 +47,14 @@ export class UserService {
     });
   }
 
+  getProfile(){
+    return this.http.get<User>(`${this.api}/me`);
+  }
+
+  updateProfile(user: User) {
+    return this.http.put<User>(`${this.api}/me`, user);
+  }
+
   getRoles(): Observable<any[]> {
     return this.http.get<any[]>('http://localhost:8080/api/roles');
   }

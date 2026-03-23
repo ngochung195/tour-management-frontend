@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -12,8 +12,11 @@ import { AuthService } from '../../services/auth.service';
 export class CustomerLayoutComponent {
   constructor(
     public authService: AuthService,
-    private router: Router
+    private router: Router,
   ) { }
+  showDropdown = false;
+
+  @ViewChild('dropdownRef') dropdownRef!: ElementRef;
 
   onBookNow() {
     if (this.authService.isLoggedIn()) {
@@ -28,6 +31,27 @@ export class CustomerLayoutComponent {
 
   logout() {
     this.authService.logout();
+    this.showDropdown = false;
     this.router.navigate(['/']);
+  }
+
+
+  toggleDropdown(){
+    this.showDropdown = !this.showDropdown;
+  }
+
+  getUsername(): string {
+    return localStorage.getItem('username') || 'User';
+  }
+
+  getAvatar(): string {
+    return 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: Event) {
+    if (!this.dropdownRef?.nativeElement.contains(event.target)) {
+      this.showDropdown = false;
+    }
   }
 }

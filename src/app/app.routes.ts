@@ -23,6 +23,8 @@ import { AdminCreateTourComponent } from './features/admin/admin-tour/create-tou
 import { AdminEditTourComponent } from './features/admin/admin-tour/edit-tour/edit-tour.component';
 import { CreateUserComponent } from './features/admin/admin-user/create-user/create-user.component';
 import { EditUserComponent } from './features/admin/admin-user/edit-user/edit-user.component';
+import {TourDetailComponent} from './features/customer/tour-detail/tour-detail.component';
+import {ProfileComponent} from './features/profile/profile.component';
 
 export const routes: Routes = [
 
@@ -31,7 +33,9 @@ export const routes: Routes = [
         component: CustomerLayoutComponent,
         children: [
             { path: '', component: HomeComponent },
+
             { path: 'tour-list', component: TourListComponent },
+            { path: 'tour/:id', component: TourDetailComponent},
 
             {
                 path: 'booking/:tourId',
@@ -50,9 +54,6 @@ export const routes: Routes = [
             }
         ]
     },
-
-    { path: 'login', component: LoginComponent },
-
 
     {
         path: 'admin',
@@ -93,6 +94,10 @@ export const routes: Routes = [
             { path: 'categories/edit/:id', component: ManagerEditCategoryComponent },
         ]
     },
+
+    { path: 'login', component: LoginComponent },
+
+    { path: 'users/me', component: ProfileComponent },
 
     {
         path: '403',

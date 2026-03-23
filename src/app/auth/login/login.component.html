@@ -1,11 +1,46 @@
-<h2>Đăng nhập</h2>
+<div class="login-page">
 
-<form (ngSubmit)="login()">
-    <input type="text" placeholder="Email đăng nhập" [(ngModel)]="email" name="email" required>
+  <div class="login-container">
 
-    <input type="password" placeholder="Mật khẩu" [(ngModel)]="password" name="password" required>
+    <div class="login-image">
+      <img src="/login.jpg" alt="login">
+    </div>
 
-    <button type="submit">Đăng nhập</button>
+    <div class="login-form">
 
-    <p class="error" *ngIf="error">{{ error }}</p>
-</form>
+      <h2>Đăng nhập</h2>
+
+      <form (ngSubmit)="login()">
+
+        <input type="text"
+               placeholder="Email đăng nhập"
+               [(ngModel)]="email"
+               name="email"
+               required>
+
+        <input type="password"
+               placeholder="Mật khẩu"
+               [(ngModel)]="password"
+               name="password"
+               required>
+
+        <button type="submit">Đăng nhập</button>
+
+<!--        <button type="button" class="btn-google">-->
+<!--          Đăng nhập bằng Google-->
+<!--        </button>-->
+
+<!--        <div class="login-links">-->
+<!--          <a href="#">Quên mật khẩu?</a>-->
+<!--          <a routerLink="/register">Đăng ký ngay !!</a>-->
+<!--        </div>-->
+
+        <p class="error" *ngIf="error">{{ error }}</p>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
