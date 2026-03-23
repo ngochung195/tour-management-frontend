@@ -1,28 +1,61 @@
+<div class="search-section">
+  <h2 class="page-title">Tìm nhanh</h2>
+
+  <div class="search-box">
+    <div class="search-item">
+      <label>Tên tour</label>
+      <input type="text" placeholder="Nhập tên tour..." [(ngModel)]="keyword"/>
+    </div>
+
+    <div class="search-item">
+      <label>Ngày bắt đầu</label>
+      <input type="date" [(ngModel)]="startDate"/>
+    </div>
+
+    <div class="search-item">
+      <label>Ngày kết thúc</label>
+      <input type="date" [(ngModel)]="endDate"/>
+    </div>
+
+    <div class="search-item">
+      <label>Danh mục</label>
+      <select [(ngModel)]="categoryId">
+        <option [ngValue]="null">Chọn danh mục</option>
+        <option *ngFor="let c of categories" [ngValue]="c.id">
+          {{ c.name }}
+        </option>
+      </select>
+    </div>
+
+    <button class="btn-search" (click)="search()">
+      <i class="bi bi-cloud-search icon"></i> Tìm kiếm
+    </button>
+    <button class="btn-reset" (click)="resetFilters()">
+      Xóa lọc
+    </button>
+
+  </div>
+</div>
+
 <h2 class="page-title">Danh sách tour</h2>
 
 <div class="tour-list">
-    <div class="tour-card" *ngFor="let tour of tours">
-
-        <div class="image-box">
-            <img [src]="tour.img" alt="{{ tour.tourName }}">
-        </div>
-
-        <div class="content">
-            <div class="title-row">
-                <h3 class="tour-name">{{ tour.tourName }}</h3>
-                <span class="price">{{ tour.price | number }} đ</span>
-            </div>
-
-            <p class="date">
-                {{ tour.startDate | date:'dd/MM/yyyy' }}
-                →
-                {{ tour.endDate | date:'dd/MM/yyyy' }}
-            </p>
-
-            <button type="button" class="btn-book" [routerLink]="['/tour', tour.id]">
-                Xem tour
-            </button>
-        </div>
-
+  <div class="tour-card" *ngFor="let tour of tours">
+    <div class="image-box">
+      <img [src]="tour.img" alt="{{ tour.tourName }}">
     </div>
+    <div class="content">
+      <div class="title-row">
+        <h3 class="tour-name">{{ tour.tourName }}</h3>
+        <span class="price">{{ tour.price | number }} đ</span>
+      </div>
+      <p class="category">{{ tour.categoryName }}</p>
+      <p class="date">
+        {{ tour.startDate | date:'dd/MM/yyyy' }} → {{ tour.endDate | date:'dd/MM/yyyy' }}
+      </p>
+      <button type="button" class="btn-book" [routerLink]="['/tour', tour.id]">
+        Xem tour
+      </button>
+    </div>
+  </div>
 </div>
