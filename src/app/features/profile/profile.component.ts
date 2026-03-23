@@ -4,6 +4,7 @@ import {UserService} from '../../services/user.service';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {Location} from '@angular/common';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-profile',
@@ -29,7 +30,8 @@ export class ProfileComponent implements OnInit{
 
   constructor(
     private userService: UserService,
-    private location: Location
+    private location: Location,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -47,10 +49,11 @@ export class ProfileComponent implements OnInit{
   saveProfile() {
     this.userService.updateProfile(this.user).subscribe({
       next: (res) => {
-        alert('Cập nhật thành công!');
+        this.toastr.success('Cập nhật thành công!');
+        this.goBack();
       },
       error: (err) => {
-        console.error('Cập nhật thất bại:', err);
+        this.toastr.error(err?.error?.message || 'Cập nhật thất bại')
       }
     });
   }

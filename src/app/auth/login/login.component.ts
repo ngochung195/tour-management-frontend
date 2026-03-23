@@ -31,7 +31,7 @@ export class LoginComponent {
         const role = decoded.roles[0];
         localStorage.setItem('role', role);
 
-        localStorage.setItem('username', decoded.sub);
+        localStorage.setItem('username', decoded.sub.split('@')[0]);
 
         if (res.role === 'ROLE_ADMIN') {
           this.router.navigate(['/admin']);

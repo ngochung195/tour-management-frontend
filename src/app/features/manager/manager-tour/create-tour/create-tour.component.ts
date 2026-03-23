@@ -55,4 +55,5 @@ export class ManagerCreateTourComponent {
       this.categories = res;
     });
   }
+
 }

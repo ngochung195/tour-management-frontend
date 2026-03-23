@@ -1,6 +1,7 @@
 export interface Tour {
     id: number;
-    categoryName: number;
+    categoryId: number;
+    categoryName: string;
     tourName: string;
     quantity: number;
     startDate: string;
