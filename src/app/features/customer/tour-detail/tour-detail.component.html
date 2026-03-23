@@ -1,0 +1,32 @@
+<div class="tour-detail" *ngIf="tour">
+
+  <div class="wrapper">
+
+    <div class="image-box">
+      <img [src]="tour.img" alt="{{ tour.tourName }}">
+    </div>
+
+    <div class="info-card">
+
+      <h2 class="title">
+        {{ tour.tourName }}
+        <span class="price">{{ tour.price | number }} đ</span>
+      </h2>
+
+      <p><strong>Ngày bắt đầu:</strong> {{ tour.startDate | date:'dd/MM/yyyy' }}</p>
+      <p><strong>Ngày kết thúc:</strong> {{ tour.endDate | date:'dd/MM/yyyy' }}</p>
+
+      <p class="description">
+        {{ tour.description }}
+      </p>
+
+      <button class="btn-book"
+              [routerLink]="['/booking', tour.id]">
+        Đặt ngay
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

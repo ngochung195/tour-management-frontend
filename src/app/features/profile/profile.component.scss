@@ -1,0 +1,129 @@
+.profile-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(135deg, #f7a21b, #f2d5a3);
+}
+
+.profile-container {
+  width: 100%;
+  max-width: 700px;
+
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 16px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 25px;
+
+  h2 {
+    color: #ff7a00; // 👈 giữ màu cam
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+
+  .role {
+    margin-top: 5px;
+    font-size: 0.95rem;
+    color: #ff7a00;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+label {
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #444;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+
+  border: none;
+  border-radius: 20px;
+  background: #f1f1f1;
+
+  font-size: 0.95rem;
+  outline: none;
+  transition: 0.2s ease;
+
+  box-sizing: border-box;
+}
+
+input:focus {
+  background: #eaeaea;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-back {
+  background: #e5e7eb;
+  color: #333;
+
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-back:hover {
+  background: #d1d5db;
+}
+
+.btn-save {
+  background: #ff7a00; // 👈 cam chủ đạo
+  color: white;
+
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.btn-save:hover {
+  background: #e66a00;
+  transform: translateY(-2px);
+}
+
+.loading {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 16px;
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 25px 15px;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+  }
+
+  .btn-back,
+  .btn-save {
+    width: 100%;
+  }
+}

@@ -4,11 +4,29 @@
             Travel<span>Go</span>
         </div>
 
-        <div class="actions">
-            <button class="login" (click)="logout()">
-                Đăng xuất
-            </button>
+      <div class="actions">
+
+        <div class="user-box"
+             #dropdownRef
+             (click)="toggleDropdown(); $event.stopPropagation()">
+
+          <img [src]="getAvatar()" class="avatar">
+
+          <span class="username"> {{ getUsername() }} </span>
+
+          <i class="bi bi-chevron-down arrow"></i>
+
+          <div class="dropdown" *ngIf="showDropdown">
+
+            <p routerLink="/users/me">Hồ sơ của tôi</p>
+
+            <p (click)="logout()">Đăng xuất</p>
+
+          </div>
+
         </div>
+
+      </div>
     </div>
 </header>
 

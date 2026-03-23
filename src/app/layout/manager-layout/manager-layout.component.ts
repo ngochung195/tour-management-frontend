@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ElementRef, HostListener, ViewChild} from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
@@ -36,6 +36,17 @@ export class ManagerLayoutComponent {
       }
     });
   }
+  showDropdown = false;
+
+  @ViewChild('dropdownRef') dropdownRef!: ElementRef;
+
+  getUsername(): string {
+    return localStorage.getItem('username') || 'User';
+  }
+
+  getAvatar(): string {
+    return 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+  }
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
@@ -44,5 +55,19 @@ export class ManagerLayoutComponent {
   logout() {
     this.authService.logout();
     this.router.navigate(['/']);
+    this.showDropdown = false;
   }
+
+
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: Event) {
+    if (!this.dropdownRef?.nativeElement.contains(event.target)) {
+      this.showDropdown = false;
+    }
+  }
+
 }
