@@ -41,11 +41,11 @@ export class TourService {
     return this.http.get<Tour[]>(`${this.api}/search`,{ params });
   }
 
-    createTour(data: Tour ) {
+    createTour(data: Tour | FormData) {
         return this.http.post(this.api, data);
     }
 
-    updateTour(id: number, tour: Tour) {
+    updateTour(id: number, tour: Tour | FormData) {
         return this.http.put(`${this.api}/${id}`, tour);
     }
 

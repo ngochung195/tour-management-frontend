@@ -25,7 +25,8 @@ export class ManagerTourComponent {
   currentPage = 1;
   pageSize = 5;
   totalPages = 0;
-  pageNumbers: number[] = [];
+  visiblePages: number[] = [];
+  pageInput: number | null = null;
 
   constructor(
     private tourService: TourService,
@@ -52,17 +53,69 @@ export class ManagerTourComponent {
       .subscribe(res =>{
         this.filteredTours = res;
         this.currentPage = 1;
+        this.pageInput = null;
         this.updatePagination();
       });
  }
 
   updatePagination() {
     this.totalPages = Math.ceil(this.filteredTours.length / this.pageSize);
-    this.pageNumbers = Array.from({ length: this.totalPages }, (_, i) => i + 1);
 
-    const start = (this.currentPage - 1) * this.pageSize;
+    if (this.totalPages === 0) {
+      this.pagedTours = [];
+      this.visiblePages = [];
+      this.currentPage = 1;
+      return;
+    }
+
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
+
+    this.changePage(this.currentPage);
+  }
+
+  changePage(page: number) {
+
+    if (page < 1 || page > this.totalPages) return;
+
+    this.currentPage = page;
+
+    const start = (page - 1) * this.pageSize;
     const end = start + this.pageSize;
+
     this.pagedTours = this.filteredTours.slice(start, end);
+
+    this.calculateVisiblePages();
+  }
+
+  private calculateVisiblePages() {
+    const range = 1;
+
+    let start = this.currentPage - range;
+    let end = this.currentPage + range;
+
+    if (start < 1) {
+      start = 1;
+      end = Math.min(3, this.totalPages);
+    }
+
+    if (end > this.totalPages) {
+      end = this.totalPages;
+      start = Math.max(1, this.totalPages - 2);
+    }
+
+    this.visiblePages = [];
+    for (let i = start; i <= end; i++) {
+      this.visiblePages.push(i);
+    }
+  }
+
+  goToPage() {
+    if (this.pageInput && this.pageInput >= 1 && this.pageInput <= this.totalPages) {
+      this.changePage(this.pageInput);
+    }
+    this.pageInput = null;
   }
 
   resetFilters() {
@@ -70,12 +123,6 @@ export class ManagerTourComponent {
     this.searchStartDate = '';
     this.searchEndDate = '';
     this.loadTours();
-  }
-
-  changePage(page: number) {
-    if (page < 1 || page > this.totalPages) return;
-    this.currentPage = page;
-    this.updatePagination();
   }
 
   goToCreate() {

@@ -22,6 +22,8 @@ export class BookingComponent implements OnInit {
 
   tour!: Tour;
 
+  apiUrl= "http://localhost:8080";
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -66,5 +68,19 @@ export class BookingComponent implements OnInit {
         );
       }
     });
+  }
+
+  getImageUrl(img: string): string {
+    if (!img) return '';
+
+    img = img.replace('/tours//uploads', '/uploads');
+
+    if (img.startsWith('http')) return img;
+
+    if (!img.startsWith('/')) {
+      img = '/' + img;
+    }
+
+    return this.apiUrl + img;
   }
 }

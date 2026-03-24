@@ -16,7 +16,6 @@ export class ManagerBookingComponent implements OnInit {
   bookings: Booking[] = [];
   filteredBookings: Booking[] = [];
   pagedBookings: Booking[] = [];
-  pageNumbers: number[] = [];
 
   searchTour = '';
   searchUser = '';
@@ -26,15 +25,17 @@ export class ManagerBookingComponent implements OnInit {
   currentPage = 1;
   itemsPerPage = 10;
   totalPages = 0;
+  visiblePages: number[] = [];
+  pageInput: number | null = null;
 
-  constructor(private BookingService: BookingService) { }
+  constructor(private bookingService: BookingService) { }
 
   ngOnInit(): void {
     this.loadBookings();
   }
 
   loadBookings() {
-    this.BookingService.getAll().subscribe(data => {
+    this.bookingService.getAll().subscribe(data => {
       console.log(data);
       this.bookings = data;
       this.filteredBookings = [...data];
@@ -43,7 +44,7 @@ export class ManagerBookingComponent implements OnInit {
   }
 
   updateStatus(id: number, status: string) {
-    this.BookingService.updateStatus(id, status).subscribe(() => {
+    this.bookingService.updateStatus(id, status).subscribe(() => {
       this.loadBookings();
     });
   }
@@ -71,6 +72,8 @@ export class ManagerBookingComponent implements OnInit {
       return matchTour && matchUser && matchStatus && matchDate;
     });
 
+    this.currentPage = 1;
+    this.pageInput = null;
     this.updatePagination();
   }
 
@@ -80,24 +83,27 @@ export class ManagerBookingComponent implements OnInit {
     this.searchDate = '';
     this.searchStatus = '';
     this.filteredBookings = [...this.bookings];
+
+    this.currentPage = 1;
+    this.pageInput = null;
     this.updatePagination();
   }
 
   updatePagination() {
     this.totalPages = Math.ceil(this.filteredBookings.length / this.itemsPerPage);
 
-    this.pageNumbers = [];
-
     if (this.totalPages === 0) {
       this.pagedBookings = [];
+      this.visiblePages = [];
+      this.currentPage = 1;
       return;
     }
 
-    for (let i = 1; i <= this.totalPages; i++) {
-      this.pageNumbers.push(i);
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
     }
 
-    this.changePage(1);
+    this.changePage(this.currentPage);
   }
 
   changePage(page: number) {
@@ -110,6 +116,36 @@ export class ManagerBookingComponent implements OnInit {
     const endIndex = startIndex + this.itemsPerPage;
 
     this.pagedBookings = this.filteredBookings.slice(startIndex, endIndex);
+
+    this.calculateVisiblePages();
+  }
+
+  private calculateVisiblePages() {
+    const range = 1;
+
+    let start = this.currentPage - range;
+    let end = this.currentPage + range;
+
+    if (start < 1) {
+      start = 1;
+      end = Math.min(3, this.totalPages);
+    }
+
+    if (end > this.totalPages) {
+      end = this.totalPages;
+      start = Math.max(1, this.totalPages - 2);
+    }
+
+    this.visiblePages = [];
+    for (let i = start; i <= end; i++) {
+      this.visiblePages.push(i);
+    }
+  }
+  goToPage() {
+    if (this.pageInput && this.pageInput >= 1 && this.pageInput <= this.totalPages) {
+      this.changePage(this.pageInput);
+    }
+    this.pageInput = null;
   }
 
   getStatusLabel(status: string): string {

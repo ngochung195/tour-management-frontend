@@ -14,6 +14,7 @@ import {RouterLink} from '@angular/router';
 })
 export class TourDetailComponent  implements OnInit{
   tour?: Tour;
+  apiUrl = "http://localhost:8080";
 
   constructor(
     private route: ActivatedRoute,
@@ -27,5 +28,18 @@ export class TourDetailComponent  implements OnInit{
       this.tourService.getById(+id).subscribe(data =>{
         this.tour = data;
       });
+  }
+  getImageUrl(img: string): string {
+    if (!img) return '';
+
+    img = img.replace('/tours//uploads', '/uploads');
+
+    if (img.startsWith('http')) return img;
+
+    if (!img.startsWith('/')) {
+      img = '/' + img;
+    }
+
+    return this.apiUrl + img;
   }
 }

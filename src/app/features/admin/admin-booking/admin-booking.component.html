@@ -72,18 +72,27 @@
     </div>
 
     <div class="pagination" *ngIf="totalPages > 1">
+      <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">«</button>
 
-        <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
-            «
+      <ng-container *ngIf="visiblePages[0] > 1">
+        <button (click)="changePage(1)">1</button>
+        <span *ngIf="visiblePages[0] > 2">...</span>
+      </ng-container>
+
+      <button *ngFor="let page of visiblePages" (click)="changePage(page)" [class.active]="page === currentPage">
+        {{ page }}
+      </button>
+
+      <ng-container *ngIf="visiblePages[visiblePages.length - 1] < totalPages">
+        <span *ngIf="visiblePages[visiblePages.length - 1] < totalPages - 1">...</span>
+        <button (click)="changePage(totalPages)">
+          {{ totalPages }}
         </button>
+      </ng-container>
 
-        <button *ngFor="let page of pageNumbers" (click)="changePage(page)" [class.active]="currentPage === page">
-            {{ page }}
-        </button>
+      <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">»</button>
 
-        <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
-            »
-        </button>
-
+      <input type="number" [(ngModel)]="pageInput" (keyup.enter)="goToPage()"
+             placeholder="Trang" min="1" [max]="totalPages"/>
     </div>
 </div>
