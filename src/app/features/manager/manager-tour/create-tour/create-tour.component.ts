@@ -21,24 +21,14 @@ export class ManagerCreateTourComponent {
     endDate: '',
     description: ''
   };
+  selectedFile: File | null = null;
+  previewUrl: string | null = null;
 
   constructor(
     private tourService: TourService,
     private router: Router,
     private toastr: ToastrService
   ) { }
-
-  saveTour() {
-    this.tourService.createTour(this.tour).subscribe({
-      next: () => {
-        this.toastr.success('Thêm tour thành công');
-        this.router.navigate(['/manager/tours']);
-      },
-      error: (err) => {
-        this.toastr.error(err?.error?.message || "Thêm tour thất bại")
-      }
-    });
-  }
 
   goBack() {
     this.router.navigate(['/manager/tours']);
@@ -56,4 +46,42 @@ export class ManagerCreateTourComponent {
     });
   }
 
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+
+    if (file) {
+      this.selectedFile = file;
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        this.previewUrl = reader.result as string;
+      }
+    }
+  }
+
+  saveTour() {
+    const formData = new FormData();
+    formData.append('tourName', this.tour.tourName);
+    formData.append('categoryId', this.tour.categoryId);
+    formData.append('price', this.tour.price);
+    formData.append('quantity', this.tour.quantity);
+    formData.append('startDate', this.tour.startDate);
+    formData.append('endDate', this.tour.endDate);
+    formData.append('description', this.tour.description);
+
+    if (this.selectedFile) {
+      formData.append('img', this.selectedFile, this.selectedFile.name);
+    }
+
+    this.tourService.createTour(formData).subscribe({
+      next: () => {
+        this.toastr.success('Thêm tour thành công');
+        this.router.navigate(['/manager/tours']);
+      },
+      error: (err) => {
+        this.toastr.error(err?.error?.message || "Thêm tour thất bại");
+      }
+    });
+  }
 }

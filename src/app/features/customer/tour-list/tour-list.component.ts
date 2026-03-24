@@ -24,6 +24,9 @@ export class TourListComponent implements OnInit {
 
   categories: { id: number, name: string }[] = [];
 
+  apiUrl = 'http://localhost:8080';
+
+
   constructor(private tourService: TourService) { }
 
   ngOnInit(): void {
@@ -32,6 +35,20 @@ export class TourListComponent implements OnInit {
       this.allTours = data;
       this.buildCategories();
     });
+  }
+
+  getImageUrl(img: string): string {
+    if (!img) return '';
+
+    img = img.replace('/tours//uploads', '/uploads');
+
+    if (img.startsWith('http')) return img;
+
+    if (!img.startsWith('/')) {
+      img = '/' + img;
+    }
+
+    return this.apiUrl + img;
   }
 
   buildCategories() {

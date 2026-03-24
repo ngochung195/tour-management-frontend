@@ -2,7 +2,7 @@
     <h2>Đặt Tour: {{ tour?.tourName }}</h2>
 
     <div class="image-wrapper" *ngIf="tour?.img">
-        <img [src]="tour!.img" class="tour-image" />
+      <img [src]="getImageUrl(tour.img)" alt="{{ tour.tourName }}">
     </div>
 
     <div class="tour-info" *ngIf="tour">

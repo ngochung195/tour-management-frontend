@@ -16,6 +16,8 @@ import { RouterModule } from '@angular/router';
 export class ManagerEditTourComponent implements OnInit {
 
   tour: any = {};
+  selectedFile: File | null = null;
+  previewUrl: string | null = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -31,20 +33,9 @@ export class ManagerEditTourComponent implements OnInit {
     if (id) {
       this.tourService.getById(id).subscribe(res => {
         this.tour = res;
+        this.previewUrl = res.img;
       });
     }
-  }
-
-  updateTour() {
-    this.tourService.updateTour(this.tour.id, this.tour).subscribe({
-      next: () => {
-        this.toastr.success('Cập nhật thành công');
-        this.router.navigate(['/manager/tours']);
-      },
-      error: (err) => {
-        this.toastr.error(err?.error?.message || 'Cập nhật thất bại');
-      }
-    });
   }
 
   categories: any[] = [];
@@ -52,6 +43,45 @@ export class ManagerEditTourComponent implements OnInit {
   loadCategories() {
     this.tourService.getCategories().subscribe(res => {
       this.categories = res;
+    });
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewUrl = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  updateTour() {
+    const formData = new FormData();
+
+    formData.append('tourName', this.tour.tourName);
+    formData.append('categoryId', this.tour.categoryId);
+    formData.append('price', this.tour.price);
+    formData.append('quantity', this.tour.quantity);
+    formData.append('startDate', this.tour.startDate);
+    formData.append('endDate', this.tour.endDate);
+    formData.append('description', this.tour.description);
+
+    if (this.selectedFile) {
+      formData.append('img', this.selectedFile, this.selectedFile.name);
+    }
+
+    this.tourService.updateTour(this.tour.id, formData).subscribe({
+      next: () => {
+        this.toastr.success('Cập nhật thành công');
+        this.router.navigate(['/manager/tours']);
+      },
+      error: (err) => {
+        this.toastr.error(err?.error?.message || "Cập nhật thất bại");
+      }
     });
   }
 }

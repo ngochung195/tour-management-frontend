@@ -18,7 +18,6 @@ export class MyBookingComponent implements OnInit {
   bookings: any[] = [];
   filteredBookings: any[] = [];
   paginatedBookings: any[] = [];
-  pageNumbers: number[] = [];
 
   loading = true;
 
@@ -28,6 +27,8 @@ export class MyBookingComponent implements OnInit {
   currentPage = 1;
   itemsPerPage = 10;
   totalPages = 1;
+  visiblePages: number[] = [];
+  pageInput: number | null = null;
 
   constructor(
     private bookingService: BookingService,
@@ -86,19 +87,18 @@ export class MyBookingComponent implements OnInit {
   updatePagination() {
     this.totalPages = Math.ceil(this.filteredBookings.length / this.itemsPerPage);
 
-    this.pageNumbers = [];
-
-
     if (this.totalPages === 0) {
       this.paginatedBookings = [];
+      this.visiblePages = [];
+      this.currentPage = 1;
       return;
     }
 
-    for (let i = 1; i <= this.totalPages; i++) {
-      this.pageNumbers.push(i);
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
     }
 
-    this.changePage(1);
+    this.changePage(this.currentPage);
   }
 
   changePage(page: number) {
@@ -112,8 +112,38 @@ export class MyBookingComponent implements OnInit {
 
     this.paginatedBookings =
       this.filteredBookings.slice(start, end);
+
+    this.calculateVisiblePages();
   }
 
+  private calculateVisiblePages() {
+    const range = 1;
+
+    let start = this.currentPage - range;
+    let end = this.currentPage + range;
+
+    if (start < 1) {
+      start = 1;
+      end = Math.min(3, this.totalPages);
+    }
+
+    if (end > this.totalPages) {
+      end = this.totalPages;
+      start = Math.max(1, this.totalPages - 2);
+    }
+
+    this.visiblePages = [];
+    for (let i = start; i <= end; i++) {
+      this.visiblePages.push(i);
+    }
+  }
+
+  goToPage() {
+    if (this.pageInput && this.pageInput >= 1 && this.pageInput <= this.totalPages) {
+      this.changePage(this.pageInput);
+    }
+    this.pageInput = null;
+  }
 
   cancelBooking(id: number) {
     Swal.fire({
