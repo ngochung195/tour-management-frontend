@@ -36,8 +36,8 @@
         </thead>
 
         <tbody>
-            <tr *ngFor="let b of paginatedBookings">
-                <td>{{ b.id }}</td>
+            <tr *ngFor="let b of paginatedBookings; let i = index">
+                <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
                 <td>{{ b.tourName }}</td>
                 <td>{{ b.bookingDate | date:'dd/MM/yyyy' }}</td>
                 <td>{{ b.total | number }} đ</td>
@@ -85,7 +85,7 @@
     </div>
 
     <div *ngIf="!loading && filteredBookings.length === 0" class="empty">
-        Không tìm thấy kết quả.
+        Bạn chưa đặt tour nào.
     </div>
 
 </div>
