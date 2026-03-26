@@ -60,11 +60,10 @@ export class TourListComponent implements OnInit {
   }
 
   search() {
-    this.tourService.searchPublic(
+    this.tourService.searchTour(
       this.keyword || undefined,
       this.startDate || undefined,
       this.endDate || undefined,
-      this.categoryId ?? undefined
     ).subscribe({
       next: (res) => {
         this.tours = res;

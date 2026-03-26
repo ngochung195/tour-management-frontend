@@ -17,15 +17,23 @@
       <input type="date" [(ngModel)]="endDate"/>
     </div>
 
-    <div class="search-item">
-      <label>Danh mục</label>
-      <select [(ngModel)]="categoryId">
-        <option [ngValue]="null">Chọn danh mục</option>
-        <option *ngFor="let c of categories" [ngValue]="c.id">
-          {{ c.name }}
-        </option>
-      </select>
-    </div>
+<!--    <div class="search-item">-->
+<!--      <label>Danh mục</label>-->
+<!--      <select [(ngModel)]="categoryId">-->
+<!--        <option [ngValue]="null">Chọn danh mục</option>-->
+<!--        <option *ngFor="let c of categories" [ngValue]="c.id">-->
+<!--          {{ c.name }}-->
+<!--        </option>-->
+<!--      </select>-->
+<!--    </div>    <div class="search-item">-->
+<!--      <label>Danh mục</label>-->
+<!--      <select [(ngModel)]="categoryId">-->
+<!--        <option [ngValue]="null">Chọn danh mục</option>-->
+<!--        <option *ngFor="let c of categories" [ngValue]="c.id">-->
+<!--          {{ c.name }}-->
+<!--        </option>-->
+<!--      </select>-->
+<!--    </div>-->
 
     <button class="btn-search" (click)="search()">
       <i class="bi bi-cloud-search icon"></i> Tìm kiếm
