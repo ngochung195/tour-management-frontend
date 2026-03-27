@@ -92,10 +92,42 @@
 
 
 .action-buttons {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+.btn-approve {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  background-color: #22c55e;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
+.btn-approve:hover {
+  background-color: #16a34a;
+  transform: scale(1.05);
+}
+
+.btn-reject {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  background-color: #ef4444;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-reject:hover {
+  background-color: #dc2626;
+  transform: scale(1.05);
+}
 .delete-btn {
     width: 34px;
     height: 34px;
