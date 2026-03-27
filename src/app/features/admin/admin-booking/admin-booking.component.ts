@@ -31,7 +31,7 @@ export class AdminBookingComponent implements OnInit {
   pageInput: number | null = null;
 
   constructor(
-    private BookingService: BookingService,
+    private bookingService: BookingService,
     private toastr: ToastrService
   ) { }
 
@@ -40,7 +40,7 @@ export class AdminBookingComponent implements OnInit {
   }
 
   loadBookings() {
-    this.BookingService.getAll().subscribe(data => {
+    this.bookingService.getAll().subscribe(data => {
       console.log(data);
       this.bookings = data;
       this.filteredBookings = [...data];
@@ -62,7 +62,7 @@ export class AdminBookingComponent implements OnInit {
 
       if (result.isConfirmed) {
 
-        this.BookingService.deleteBooking(id).subscribe({
+        this.bookingService.deleteBooking(id).subscribe({
 
           next: () => {
             this.toastr.success('Xóa booking thành công', 'Thành công');
@@ -180,6 +180,12 @@ export class AdminBookingComponent implements OnInit {
       this.changePage(this.pageInput);
     }
     this.pageInput = null;
+  }
+
+  updateStatus(id: number, status: string) {
+    this.bookingService.updateStatus(id, status).subscribe(() => {
+      this.loadBookings();
+    });
   }
 
   getStatusLabel(status: string): string {

@@ -58,6 +58,15 @@
 
                 <td>
                     <div class="action-buttons">
+                        <button *ngIf="b.status === 'PENDING'" class="btn-approve"
+                                (click)="updateStatus(b.id, 'APPROVED')">
+                          Duyệt
+                        </button>
+
+                        <button *ngIf="b.status === 'PENDING'" class="btn-reject"
+                                (click)="updateStatus(b.id, 'REJECTED')">
+                          Từ chối
+                        </button>
                         <button class="icon-btn delete-btn" (click)="deleteBooking(b.id)" title="Xóa">
                             <i class="bi bi-trash"></i>
                         </button>
