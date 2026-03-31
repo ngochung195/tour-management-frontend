@@ -5,6 +5,7 @@ import { BookingService } from '../../../services/booking.service';
 import { RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
+import {PaymentService} from '../../../services/payment.service';
 
 @Component({
   selector: 'app-my-booking',
@@ -32,6 +33,7 @@ export class MyBookingComponent implements OnInit {
 
   constructor(
     private bookingService: BookingService,
+    private paymentService: PaymentService,
     private toastr: ToastrService
   ) { }
 
@@ -145,6 +147,25 @@ export class MyBookingComponent implements OnInit {
     this.pageInput = null;
   }
 
+  goToPayment(bookingId: number) {
+    this.paymentService.createPayment(bookingId).subscribe({
+      next: (res) => {
+        console.log('Payment response:', res);
+        if (res.status === 'OK' && res.url) {
+          window.location.href = res.url;
+        } else {
+          this.toastr.error('Không thể tạo link thanh toán', 'Lỗi');
+        }
+      },
+      error: (err) => {
+        this.toastr.error(
+          err?.error?.message || 'Lỗi khi tạo thanh toán',
+          'Lỗi'
+        );
+      }
+    });
+  }
+
   cancelBooking(id: number) {
     Swal.fire({
       title: 'Bạn có chắc muốn hủy tour này không?',
@@ -177,6 +198,7 @@ export class MyBookingComponent implements OnInit {
   getStatusLabel(status: string): string {
     switch (status) {
       case 'PENDING': return 'Chờ xử lý';
+      case 'PAID' : return 'Đã thanh toán';
       case 'APPROVED': return 'Đã xác nhận';
       case 'REJECTED': return 'Bị từ chối';
       case 'CANCELLED': return 'Đã hủy';

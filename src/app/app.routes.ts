@@ -25,6 +25,7 @@ import { CreateUserComponent } from './features/admin/admin-user/create-user/cre
 import { EditUserComponent } from './features/admin/admin-user/edit-user/edit-user.component';
 import {TourDetailComponent} from './features/customer/tour-detail/tour-detail.component';
 import {ProfileComponent} from './features/profile/profile.component';
+import {PaymentResultComponent} from './features/customer/payment-result/payment-result.component';
 
 export const routes: Routes = [
 
@@ -51,7 +52,9 @@ export const routes: Routes = [
                         .then(m => m.MyBookingComponent),
                 canActivate: [authGuard],
                 data: { role: 'ROLE_CUSTOMER' }
-            }
+            },
+
+          { path: 'payment-result', component: PaymentResultComponent }
         ]
     },
 

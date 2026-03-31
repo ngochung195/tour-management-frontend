@@ -76,18 +76,28 @@
 }
 
 .pending {
-    background: #fef3c7;
-    color: #d97706;
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.paid {
+  background: #dbeafe;
+  color: #2563eb;
 }
 
 .approved {
-    background: #dcfce7;
-    color: #16a34a;
+  background: #dcfce7;
+  color: #16a34a;
 }
 
 .rejected {
-    background: #fee2e2;
-    color: #dc2626;
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.cancelled {
+  background: #e8e8e8;
+  color: #6b7280;
 }
 
 

@@ -57,11 +57,13 @@
                 </td>
 
                 <td>
-                    <button *ngIf="b.status === 'PENDING'" class="btn-approve" (click)="updateStatus(b.id, 'APPROVED')">
+                    <button *ngIf="b.status === 'PENDING' || b.status === 'PAID' " class="btn-approve"
+                            (click)="updateStatus(b.id, 'APPROVED')">
                         Duyệt
                     </button>
 
-                    <button *ngIf="b.status === 'PENDING'" class="btn-reject" (click)="updateStatus(b.id, 'REJECTED')">
+                    <button *ngIf="b.status === 'PENDING' || b.status === 'PAID' " class="btn-reject"
+                            (click)="updateStatus(b.id, 'REJECTED')">
                         Từ chối
                     </button>
                 </td>

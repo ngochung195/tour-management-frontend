@@ -1,0 +1,39 @@
+<div class="result-wrapper">
+
+  <div class="result-card" *ngIf="!loading">
+
+    <ng-container *ngIf="status === 'success'">
+      <div class="icon success">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+      <h2>Thanh toán thành công!</h2>
+      <p>Cảm ơn bạn đã đặt tour. Email xác nhận đã được gửi đến hộp thư của bạn.</p>
+      <div class="actions">
+        <button class="btn btn-primary" (click)="goMyBookings()">
+          <i class="bi bi-calendar2-check me-2"></i> Xem booking của tôi
+        </button>
+        <button class="btn btn-outline" (click)="goHome()">
+          <i class="bi bi-house me-2"></i> Về trang chủ
+        </button>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="status === 'fail'">
+      <div class="icon fail">
+        <i class="bi bi-x-circle-fill"></i>
+      </div>
+      <h2>Thanh toán thất bại</h2>
+      <p>Giao dịch không thành công. Booking của bạn đã bị hủy.</p>
+      <div class="actions">
+        <button class="btn btn-primary" (click)="goMyBookings()">
+          <i class="bi bi-calendar2-check me-2"></i> Xem booking của tôi
+        </button>
+        <button class="btn btn-outline" (click)="goHome()">
+          <i class="bi bi-house me-2"></i> Về trang chủ
+        </button>
+      </div>
+    </ng-container>
+
+  </div>
+
+</div>

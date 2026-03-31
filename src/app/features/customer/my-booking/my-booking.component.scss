@@ -49,40 +49,89 @@ tbody tr:hover {
     font-weight: 500;
 }
 
-.status.pending {
-    background: #fef3c7;
-    color: #c27241;
+.pending {
+  background: #fef3c7;
+  color: #d97706;
 }
 
-.status.approved {
-    background: #dbeafe;
-    color: #1e40af;
+.paid {
+  background: #dbeafe;
+  color: #2563eb;
 }
 
-.status.rejected {
-    background: #ffc3c3;
-    color: #991b1b;
+.approved {
+  background: #dcfce7;
+  color: #16a34a;
 }
 
-.status.cancelled {
-    background: #fee2e2;
-    color: #991b1b;
+.rejected {
+  background: #fee2e2;
+  color: #dc2626;
 }
+
+.cancelled {
+  background: #e8e8e8;
+  color: #6b7280;
+}
+
 
 .btn-cancel {
-    background: #ef4444;
-    color: #fff;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-}
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-left: 5px;
 
-.btn-cancel:hover {
+  &:hover {
     background: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
 }
 
+
+.btn-pay {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+
+@media (max-width: 480px) {
+  .btn-cancel, .btn-pay {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+}
 .filter-bar {
     display: flex;
     gap: 12px;
