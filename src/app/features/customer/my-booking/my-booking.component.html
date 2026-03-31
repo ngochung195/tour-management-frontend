@@ -50,7 +50,12 @@
                 </td>
 
                 <td>
-                    <button *ngIf="b.status === 'PENDING' || b.status === 'APPROVED'" class="btn-cancel"
+                    <button *ngIf="b.status === 'PENDING'" class="btn-pay"
+                            (click)="goToPayment(b.id)">
+                      Thanh toán
+                    </button>
+                    <button *ngIf="b.status === 'PENDING' || b.status === 'PAID'
+                            || b.status === 'APPROVED'" class="btn-cancel"
                         (click)="cancelBooking(b.id)">
                         Hủy
                     </button>

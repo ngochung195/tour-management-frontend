@@ -191,6 +191,7 @@ export class AdminBookingComponent implements OnInit {
   getStatusLabel(status: string): string {
     switch (status) {
       case 'PENDING': return 'Chờ xử lý';
+      case 'PAID' : return 'Đã thanh toán';
       case 'APPROVED': return 'Đã xác nhận';
       case 'REJECTED': return 'Bị từ chối';
       case 'CANCELLED': return 'Đã hủy';

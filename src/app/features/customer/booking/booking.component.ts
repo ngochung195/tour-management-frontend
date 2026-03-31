@@ -7,6 +7,7 @@ import { BookingRequest } from '../../../models/booking-request.model';
 import { Tour } from '../../../models/tour.model';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import {PaymentService} from '../../../services/payment.service';
 
 @Component({
   selector: 'app-booking',
@@ -28,6 +29,7 @@ export class BookingComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private bookingService: BookingService,
+    private paymentService: PaymentService,
     private tourService: TourService,
     private toastr: ToastrService
   ) { }
@@ -51,17 +53,26 @@ export class BookingComponent implements OnInit {
     };
 
     this.bookingService.bookTour(booking).subscribe({
-      next: () => {
-        this.toastr.success(
-          `Đặt tour "${this.tour.tourName}" thành công – chờ thanh toán`,
-          'Thành công'
-        );
-
-        this.router.navigate(['/tour-list']);
+      next: (res) => {
+        this.paymentService.createPayment(res.id).subscribe({
+          next: (payment) => {
+            if (payment.status === 'OK' && payment.url) {
+              window.location.href = payment.url;
+            } else {
+              this.toastr.error('Không thể tạo link thanh toán', 'Lỗi');
+              this.router.navigate(['/my-bookings']);
+            }
+          },
+          error: (err) => {
+            this.toastr.error(
+              err?.error?.message || 'Lỗi tạo thanh toán',
+              'Lỗi'
+            );
+            this.router.navigate(['/my-bookings']);
+          }
+        });
       },
       error: (err) => {
-        console.error('BOOKING ERROR:', err);
-
         this.toastr.error(
           err?.error?.message || 'Đặt tour thất bại',
           'Lỗi'
@@ -69,7 +80,6 @@ export class BookingComponent implements OnInit {
       }
     });
   }
-
   getImageUrl(img: string): string {
     if (!img) return '';
 
