@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import {authGuard} from '../../guards/auth.guard';
 
 @Component({
   selector: 'app-admin-layout',
@@ -39,7 +40,7 @@ export class AdminLayoutComponent {
   @ViewChild('dropdownRef') dropdownRef!: ElementRef;
 
   getUsername(): string {
-    return localStorage.getItem('username') || 'User';
+    return this.authService.getUsername();
   }
 
   getAvatar(): string {

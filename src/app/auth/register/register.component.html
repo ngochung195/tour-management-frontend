@@ -1,0 +1,29 @@
+<div class="register-container">
+  <div class="register-card">
+
+    <div class="left">
+      <img src="/register.jpg" alt="register" />
+    </div>
+
+    <div class="right">
+      <h2>Đăng ký</h2>
+
+      <form (ngSubmit)="register()">
+
+        <input [(ngModel)]="userName" name="userName" placeholder="Tên đăng nhập" />
+
+        <input [(ngModel)]="phone" name="phone" placeholder="Số điện thoại" />
+
+        <input [(ngModel)]="email" name="email" placeholder="Email" />
+
+        <input [(ngModel)]="password" name="password" type="password" placeholder="Mật khẩu" />
+
+        <input [(ngModel)]="confirmPassword" name="confirmPassword" type="password" placeholder="Xác nhận mật khẩu" />
+
+        <button type="submit">Đăng ký</button>
+
+      </form>
+    </div>
+
+  </div>
+</div>
