@@ -41,7 +41,7 @@ export class CustomerLayoutComponent {
   }
 
   getUsername(): string {
-    return localStorage.getItem('username') || 'User';
+    return this.authService.getUsername();
   }
 
   getAvatar(): string {

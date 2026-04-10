@@ -41,7 +41,7 @@ export class ManagerLayoutComponent {
   @ViewChild('dropdownRef') dropdownRef!: ElementRef;
 
   getUsername(): string {
-    return localStorage.getItem('username') || 'User';
+    return this.authService.getUsername();
   }
 
   getAvatar(): string {

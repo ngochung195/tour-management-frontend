@@ -26,6 +26,7 @@ import { EditUserComponent } from './features/admin/admin-user/edit-user/edit-us
 import {TourDetailComponent} from './features/customer/tour-detail/tour-detail.component';
 import {ProfileComponent} from './features/profile/profile.component';
 import {PaymentResultComponent} from './features/customer/payment-result/payment-result.component';
+import {RegisterComponent} from './auth/register/register.component';
 
 export const routes: Routes = [
 
@@ -99,6 +100,8 @@ export const routes: Routes = [
     },
 
     { path: 'login', component: LoginComponent },
+
+    { path: 'register', component: RegisterComponent },
 
     { path: 'users/me', component: ProfileComponent },
 

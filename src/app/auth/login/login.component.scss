@@ -69,6 +69,10 @@
     font-weight: 600;
   }
 
+  button[type="submit"]:hover {
+    background: #357abd;
+  }
+
   .btn-google {
     background: #e74c3c;
     color: white;
@@ -77,6 +81,10 @@
     border: none;
     margin-top: 10px;
     cursor: pointer;
+  }
+
+  .btn-google:hover {
+    background: #c0392b;
   }
 
   .login-links {
