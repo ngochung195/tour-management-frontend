@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {Router, ActivatedRoute, RouterModule} from '@angular/router';
@@ -13,7 +13,7 @@ import { ToastrService} from 'ngx-toastr';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
   email = '';
   password = '';
   error = '';
@@ -64,5 +64,10 @@ export class LoginComponent {
         }
       }
     });
+  }
+
+  loginWithGoogle() {
+    window.location.href =
+      'http://localhost:8080/oauth2/authorization/google';
   }
 }
