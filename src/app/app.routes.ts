@@ -27,6 +27,9 @@ import {TourDetailComponent} from './features/customer/tour-detail/tour-detail.c
 import {ProfileComponent} from './features/profile/profile.component';
 import {PaymentResultComponent} from './features/customer/payment-result/payment-result.component';
 import {RegisterComponent} from './auth/register/register.component';
+import {LoginSuccessComponent} from './auth/login-success/login-success.component';
+import {ForgotPasswordComponent} from './auth/forgot-password/forgot-password.component';
+import {ResetPasswordComponent} from './auth/reset-password/reset-password.component';
 
 export const routes: Routes = [
 
@@ -101,7 +104,13 @@ export const routes: Routes = [
 
     { path: 'login', component: LoginComponent },
 
+    { path: 'login-success', component: LoginSuccessComponent},
+
     { path: 'register', component: RegisterComponent },
+
+    { path: 'forgot-password', component: ForgotPasswordComponent},
+
+    { path: 'reset-password', component: ResetPasswordComponent},
 
     { path: 'users/me', component: ProfileComponent },
 

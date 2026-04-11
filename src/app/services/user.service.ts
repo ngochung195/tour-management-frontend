@@ -47,6 +47,20 @@ export class UserService {
     });
   }
 
+  forgotPassword(email: string) {
+    return this.http.post(
+      `${this.api}/forgot-password?email=${email}`,
+      {}
+    );
+  }
+
+  resetPassword(token: string, newPassword: string) {
+    return this.http.post(
+      `${this.api}/reset-password?token=${token}&newPassword=${newPassword}`,
+      {}
+    );
+  }
+
   getProfile(){
     return this.http.get<User>(`${this.api}/me`);
   }

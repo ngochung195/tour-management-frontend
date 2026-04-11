@@ -26,12 +26,10 @@
 
         <button type="submit">Đăng nhập</button>
 
-        <button type="button" class="btn-google">
-          Đăng nhập bằng Google
-        </button>
+        <button type="button" class="btn-google" (click)="loginWithGoogle()"> Đăng nhập bằng Google</button>
 
         <div class="login-links">
-          <a href="#">Quên mật khẩu?</a>
+          <a routerLink="/forgot-password">Quên mật khẩu?</a>
           <a routerLink="/register">Đăng ký ngay !!</a>
         </div>
 

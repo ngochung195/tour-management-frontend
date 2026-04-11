@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit{
 
   userName = '';
   phone = '';
@@ -23,8 +23,19 @@ export class RegisterComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private route: ActivatedRoute,
     private toastr: ToastrService
   ) {}
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['email']) {
+        this.email = params['email'];
+        this.userName = params['name'] || '';
+        this.toastr.info('Tài khoản Google chưa đăng ký - Đăng ký ngay');
+      }
+    });
+  }
 
   register() {
 
