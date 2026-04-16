@@ -1,0 +1,142 @@
+<div class="tour-wrapper">
+
+  <h2 class="title">Quản lý Lịch trình</h2>
+
+  <div class="filter-form">
+
+    <input type="text"
+           placeholder="Tìm theo tên tour..."
+           [(ngModel)]="searchName" />
+
+    <input type="date" [(ngModel)]="searchStartDate" />
+    <input type="date" [(ngModel)]="searchEndDate" />
+
+    <button class="btn-search" (click)="searchTour()">Tìm kiếm</button>
+    <button class="btn-reset" (click)="resetFilters()">Xóa lọc</button>
+
+    <button class="btn btn-success btn-add" (click)="goToCreate()">
+      <i class="bi bi-plus-circle"></i> Thêm lịch trình
+    </button>
+
+  </div>
+
+  <table class="table" *ngIf="pagedTours.length > 0">
+
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Tên tour</th>
+      <th>Giá</th>
+      <th>Ngày khởi hành</th>
+      <th>Số ngày</th>
+      <th>Hành động</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <ng-container *ngFor="let t of pagedTours">
+
+      <tr (click)="toggleExpand(t.id)" style="cursor:pointer">
+        <td>{{ t.id }}</td>
+        <td>{{ t.tourName }}</td>
+        <td>{{ t.price | number }} đ</td>
+        <td>{{ t.startDate | date:'dd/MM/yyyy' }}</td>
+        <td>{{ getMaxDay(t.id) }} ngày</td>
+        <td class="action-buttons">
+
+          <button class="icon-btn view-btn"
+                  (click)="toggleExpand(t.id); $event.stopPropagation()">
+            <i class="bi bi-eye"></i>
+          </button>
+
+          <button class="icon-btn edit-btn"
+                  (click)="goToEdit(t.id); $event.stopPropagation()">
+            <i class="bi bi-pencil-square"></i>
+          </button>
+
+          <button class="icon-btn delete-all-btn"
+                  (click)="deleteByTour(t.id); $event.stopPropagation()">
+            <i class="bi bi-trash-fill"></i>
+          </button>
+
+        </td>
+      </tr>
+
+      <tr *ngIf="expandedTourId === t.id">
+        <td colspan="6" class="expand-box">
+          <div class="itinerary-list">
+
+            <ng-container *ngFor="let i of getItineraries(t.id); let idx = index">
+
+              <div *ngIf="idx === 0 || i.dayNumber !== getItineraries(t.id)[idx - 1].dayNumber"
+                   class="day-title">
+                Ngày {{ i.dayNumber }}
+              </div>
+
+              <div class="itinerary-item">
+
+                <div class="time">{{ formatTime(i.time) }}</div>
+
+                <div class="content">
+                  <div class="activity">{{ i.activity }}</div>
+                  <div class="desc">{{ i.description }}</div>
+                </div>
+
+                <div class="actions">
+                  <button class="icon-btn delete-btn"
+                          (click)="deleteItinerary(i.id); $event.stopPropagation()">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+
+              </div>
+
+            </ng-container>
+
+          </div>
+        </td>
+      </tr>
+
+    </ng-container>
+
+    </tbody>
+
+  </table>
+
+  <div *ngIf="pagedTours.length === 0" class="empty">
+    Không có dữ liệu
+  </div>
+
+  <div class="pagination" *ngIf="totalPages > 1">
+
+    <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">«</button>
+
+    <ng-container *ngIf="visiblePages[0] > 1">
+      <button (click)="changePage(1)">1</button>
+      <span *ngIf="visiblePages[0] > 2">...</span>
+    </ng-container>
+
+    <button *ngFor="let page of visiblePages"
+            (click)="changePage(page)"
+            [class.active]="page === currentPage">
+      {{ page }}
+    </button>
+
+    <ng-container *ngIf="visiblePages[visiblePages.length - 1] < totalPages">
+      <span *ngIf="visiblePages[visiblePages.length - 1] < totalPages - 1">...</span>
+      <button (click)="changePage(totalPages)">{{ totalPages }}</button>
+    </ng-container>
+
+    <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">»</button>
+
+    <input type="number"
+           [(ngModel)]="pageInput"
+           (keyup.enter)="goToPage()"
+           placeholder="Trang"
+           min="1"
+           [max]="totalPages" />
+
+  </div>
+
+</div>

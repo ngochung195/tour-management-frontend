@@ -30,6 +30,28 @@ import {RegisterComponent} from './auth/register/register.component';
 import {LoginSuccessComponent} from './auth/login-success/login-success.component';
 import {ForgotPasswordComponent} from './auth/forgot-password/forgot-password.component';
 import {ResetPasswordComponent} from './auth/reset-password/reset-password.component';
+import {ManagerHotelComponent} from './features/manager/manager-hotel/manager-hotel.component';
+import {ManagerCreateHotelComponent} from './features/manager/manager-hotel/create-hotel/create-hotel.component';
+import {ManagerEditHotelComponent} from './features/manager/manager-hotel/edit-hotel/edit-hotel.component';
+import {ManagerVehicleComponent} from './features/manager/manager-vehicle/manager-vehicle.component';
+import {
+  ManagerCreateVehicleComponent
+} from './features/manager/manager-vehicle/create-vehicle/create-vehicle.component';
+import {ManagerEditVehicleComponent} from './features/manager/manager-vehicle/edit-vehicle/edit-vehicle.component';
+import {ManagerTourDetailComponent} from './features/manager/manager-tour-detail/manager-tour-detail.component';
+import {
+  ManagerCreateTourDetailComponent
+} from './features/manager/manager-tour-detail/create-tour-detail/create-tour-detail.component';
+import {
+  ManagerEditTourDetailComponent
+} from './features/manager/manager-tour-detail/edit-tour-detail/edit-tour-detail.component';
+import {ManagerItineraryComponent} from './features/manager/manager-itinerary/manager-itinerary.component';
+import {
+  ManagerCreateItineraryComponent
+} from './features/manager/manager-itinerary/create-itinerary/create-itinerary.component';
+import {
+  ManagerEditItineraryComponent
+} from './features/manager/manager-itinerary/edit-itinerary/edit-itinerary.component';
 
 export const routes: Routes = [
 
@@ -99,7 +121,22 @@ export const routes: Routes = [
             { path: 'categories', component: ManagerCategoryComponent },
             { path: 'categories/create', component: ManagerCreateCategoryComponent },
             { path: 'categories/edit/:id', component: ManagerEditCategoryComponent },
-        ]
+
+            { path: 'hotels', component: ManagerHotelComponent},
+            { path: 'hotels/create', component: ManagerCreateHotelComponent },
+            { path: 'hotels/edit/:id', component: ManagerEditHotelComponent },
+
+            { path: 'vehicles', component: ManagerVehicleComponent},
+            { path: 'vehicles/create', component: ManagerCreateVehicleComponent },
+            { path: 'vehicles/edit/:id', component: ManagerEditVehicleComponent },
+
+            { path: 'tour-details', component: ManagerTourDetailComponent },
+            { path: 'tour-details/create', component: ManagerCreateTourDetailComponent},
+            { path: 'tour-details/edit/:id', component: ManagerEditTourDetailComponent },
+
+            { path: 'itineraries', component: ManagerItineraryComponent},
+            { path: 'itineraries/create', component: ManagerCreateItineraryComponent },
+            { path: 'itineraries/edit/:tourId', component: ManagerEditItineraryComponent }        ]
     },
 
     { path: 'login', component: LoginComponent },

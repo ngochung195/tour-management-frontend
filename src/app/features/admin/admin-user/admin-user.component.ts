@@ -113,9 +113,22 @@ export class AdminUserComponent {
   }
 
   goToPage() {
-    if (this.pageInput && this.pageInput >= 1 && this.pageInput <= this.totalPages) {
-      this.changePage(this.pageInput);
+    if (this.pageInput === null) {
+      return;
     }
+
+    let page = this.pageInput;
+
+    if (page < 1) {
+      page = 1;
+    }
+
+    if (page > this.totalPages) {
+      page = this.totalPages;
+    }
+
+    this.changePage(page);
+
     this.pageInput = null;
   }
 
