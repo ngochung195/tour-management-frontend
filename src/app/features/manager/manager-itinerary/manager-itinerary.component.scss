@@ -1,0 +1,270 @@
+.tour-wrapper {
+  padding: 24px;
+}
+
+.title {
+  color: #1e3a8a;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.filter-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.filter-form input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.btn-add {
+  margin-left: auto;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(34, 197, 94, 0.3);
+}
+
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  background: #1e3a8a;
+  color: white;
+  padding: 12px;
+}
+
+.table td {
+  text-align: center;
+  padding: 12px;
+}
+
+
+.btn-search {
+  background: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-search:hover {
+  background: #1d4ed8;
+}
+
+.btn-reset {
+  background: #6b7280;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-reset:hover {
+  background: #4b5563;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.view-btn {
+  background: #cbf6d7;
+  color: #1ac552;
+}
+
+.view-btn:hover {
+  background-color: #1bdf63;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+
+.edit-btn {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.edit-btn:hover {
+  background-color: #3b82f6;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.delete-btn {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.delete-btn:hover {
+  background-color: #ef4444;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.delete-all-btn {
+  background: #fee2e2;
+  color: #d14747;
+}
+
+.delete-all-btn:hover {
+  background-color: #ef4444;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.expand-box {
+  background: #f8fafc;
+  text-align: left;
+  padding: 16px;
+}
+
+.itinerary-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 20px;
+}
+
+.day-title {
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 12px 0 6px 0;
+  padding-left: 6px;
+  border-left: 4px solid #1e3a8a;
+}
+
+.itinerary-item {
+  display: grid;
+  grid-template-columns: 90px 1fr 250px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  width: 100%;
+  border-bottom: 1px dashed #e5e7eb;
+  margin-left: 20px;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.time {
+  width: 70px;
+  color: #2563eb;
+  font-weight: 600;
+  text-align: left;
+  margin-left: 6px;
+}
+
+.content {
+  text-align: left;
+}
+
+.activity {
+  font-weight: 600;
+  color: #111827;
+}
+
+.desc {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 36px;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #f3f4f6;
+  color: #000;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination button.active {
+  background: #1e3a8a;
+  color: white;
+  border-color: #1e3a8a;
+  font-weight: 600;
+}
+
+.pagination span {
+  padding: 0 6px;
+  color: #888;
+  font-weight: 500;
+}
+
+.pagination input {
+  width: 60px;
+  height: 32px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  text-align: center;
+  outline: none;
+  transition: 0.2s;
+}
+
+.pagination input:focus {
+  border-color: #1e3a8a;
+  box-shadow: 0 0 0 1px rgb(59, 130, 246);
+}
+
+.pagination input::-webkit-outer-spin-button,
+.pagination input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.pagination input[type=number] {
+  -moz-appearance: textfield;
+}

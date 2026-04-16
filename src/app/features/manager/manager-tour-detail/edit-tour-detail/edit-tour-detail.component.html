@@ -1,0 +1,47 @@
+<div class="edit-container">
+  <h2>Cập nhật chi tiết tour</h2>
+
+  <form (ngSubmit)="updateTourDetail()" *ngIf="tourDetail">
+
+    <div class="form-group">
+      <label>Tour</label>
+      <select [(ngModel)]="tourDetail.tourId" name="tourId" required>
+        <option [ngValue]="null">Chọn tour</option>
+        <option *ngFor="let t of tours" [ngValue]="t.id">
+          {{ t.tourName }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Hotel</label>
+      <select [(ngModel)]="tourDetail.hotelId" name="hotelId" required>
+        <option [ngValue]="null">Chọn hotel</option>
+        <option *ngFor="let h of hotels" [ngValue]="h.id">
+          {{ h.hotelName }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Vehicle</label>
+      <select [(ngModel)]="tourDetail.vehicleId" name="vehicleId" required>
+        <option [ngValue]="null">Chọn vehicle</option>
+        <option *ngFor="let v of vehicles" [ngValue]="v.id">
+          {{ v.vehicleName }}
+        </option>
+      </select>
+    </div>
+
+    <div class="btn-group">
+      <button type="button" class="btn-secondary" (click)="goBack()">
+        Hủy
+      </button>
+
+      <button type="submit" class="btn-primary">
+        Cập nhật
+      </button>
+    </div>
+
+  </form>
+</div>

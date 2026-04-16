@@ -1,0 +1,89 @@
+<div class="hotel-wrapper">
+
+  <h2 class="title">Quản lý Khách sạn</h2>
+
+  <div class="filter-form">
+
+    <input type="text" placeholder="Tìm theo tên khách sạn..." [(ngModel)]="searchName" />
+
+    <input type="text" placeholder="Tìm theo địa chỉ..." [(ngModel)]="searchAddress" />
+
+
+    <button class="btn-search" (click)="searchHotel()">
+      Tìm kiếm
+    </button>
+
+    <button class="btn-reset" (click)="resetFilters()">
+      Xóa lọc
+    </button>
+
+    <button class="btn btn-success btn-add" (click)="goToCreate()">
+      <i class="bi bi-plus-circle"></i> Thêm khách sạn
+    </button>
+
+  </div>
+
+  <table class="table" *ngIf="pagedHotels.length > 0">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Tên khách sạn</th>
+      <th>Mô tả</th>
+      <th>Địa chỉ</th>
+      <th>Hành động</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let h of pagedHotels">
+      <td>{{ h.id }}</td>
+      <td>{{ h.hotelName }}</td>
+      <td>{{ h.description }}</td>
+      <td>{{ h.address }}</td>
+      <td class="action-buttons">
+
+        <button class="icon-btn edit-btn" (click)="goToEdit(h.id)" title="Chỉnh sửa">
+          <i class="bi bi-pencil-square"></i>
+        </button>
+
+        <button class="icon-btn delete-btn" (click)="deleteHotel(h.id)" title="Xóa">
+          <i class="bi bi-trash"></i>
+        </button>
+
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="filteredHotels.length === 0" class="empty">
+    Không có khách sạn nào.
+  </div>
+
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">«</button>
+
+    <ng-container *ngIf="visiblePages[0] > 1">
+      <button (click)="changePage(1)">1</button>
+      <span *ngIf="visiblePages[0] > 2">...</span>
+    </ng-container>
+
+    <button *ngFor="let page of visiblePages"
+            (click)="changePage(page)"
+            [class.active]="page === currentPage">
+      {{ page }}
+    </button>
+
+    <ng-container *ngIf="visiblePages[visiblePages.length - 1] < totalPages">
+      <span *ngIf="visiblePages[visiblePages.length - 1] < totalPages - 1">...</span>
+      <button (click)="changePage(totalPages)">
+        {{ totalPages }}
+      </button>
+    </ng-container>
+
+    <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">»</button>
+
+    <input type="number" [(ngModel)]="pageInput" (keyup.enter)="goToPage()"
+           placeholder="Trang" min="1" [max]="totalPages"/>
+  </div>
+
+</div>

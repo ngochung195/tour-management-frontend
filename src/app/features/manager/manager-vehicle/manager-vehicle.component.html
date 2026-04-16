@@ -1,0 +1,75 @@
+<div class="tour-wrapper">
+
+  <h2 class="title">Quản lý Phương tiện</h2>
+
+  <div class="filter-form">
+    <input type="text"
+           placeholder="Tìm theo tên phương tiện..."
+           [(ngModel)]="searchName" />
+
+    <button class="btn-search" (click)="searchVehicle()">
+      Tìm kiếm
+    </button>
+
+    <button class="btn-reset" (click)="resetFilters()">
+      Xóa lọc
+    </button>
+
+    <button class="btn btn-success btn-add" (click)="goToCreate()">
+      <i class="bi bi-plus-circle"></i> Thêm phương tiện
+    </button>
+  </div>
+
+  <table class="table" *ngIf="pagedVehicles.length > 0">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Tên</th>
+      <th>Mô tả</th>
+      <th>Hành động</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let v of pagedVehicles">
+      <td>{{ v.id }}</td>
+      <td>{{ v.vehicleName }}</td>
+      <td>{{ v.description }}</td>
+
+      <td class="action-buttons">
+        <button class="icon-btn edit-btn"
+                (click)="goToEdit(v.id)">
+          <i class="bi bi-pencil-square"></i>
+        </button>
+
+        <button class="icon-btn delete-btn"
+                (click)="deleteVehicle(v.id)">
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="filteredVehicles.length === 0" class="empty">
+    Không có dữ liệu.
+  </div>
+
+  <!-- Pagination giữ nguyên như Tour -->
+  <div class="pagination" *ngIf="totalPages > 1">
+
+    <button (click)="changePage(currentPage - 1)"
+            [disabled]="currentPage === 1">«</button>
+
+    <button *ngFor="let page of visiblePages"
+            (click)="changePage(page)"
+            [class.active]="page === currentPage">
+      {{ page }}
+    </button>
+
+    <button (click)="changePage(currentPage + 1)"
+            [disabled]="currentPage === totalPages">»</button>
+
+  </div>
+
+</div>

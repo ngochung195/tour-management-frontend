@@ -1,27 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TourService } from '../../../services/tour.service';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
-import { Tour } from '../../../models/tour.model';
+import { ToastrService } from 'ngx-toastr';
+
+import { TourDetailService } from '../../../services/tour-detail.service';
+import { TourDetail } from '../../../models/tour-detail.model';
 
 @Component({
-  selector: 'app-admin-tour',
+  selector: 'app-manager-tour-detail',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './admin-tour.component.html',
-  styleUrl: './admin-tour.component.scss'
+  templateUrl: './manager-tour-detail.component.html',
+  styleUrl: './manager-tour-detail.component.scss'
 })
-export class AdminTourComponent {
-  tours: Tour[] = [];
-  filteredTours: Tour[] = [];
-  pagedTours: Tour[] = [];
+export class ManagerTourDetailComponent implements OnInit {
 
-  searchName: string = '';
-  searchStartDate: string = '';
-  searchEndDate: string = '';
+  tourDetails: TourDetail[] = [];
+  filtered: TourDetail[] = [];
+  paged: TourDetail[] = [];
+
+  searchTour: string = '';
+  searchHotel: string = '';
+  searchVehicle: string = '';
 
   currentPage = 1;
   pageSize = 5;
@@ -30,41 +32,49 @@ export class AdminTourComponent {
   pageInput: number | null = null;
 
   constructor(
-    private tourService: TourService,
-    private toastr: ToastrService,
-    private router: Router
-  ) { }
+    private service: TourDetailService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
-    this.loadTours();
+    this.load();
   }
 
-  loadTours() {
-    this.tourService.getAll().subscribe(res => {
-      this.tours = res;
-      this.filteredTours = res;
+  load() {
+    this.service.getAll().subscribe(res => {
+      this.tourDetails = res;
+      this.filtered = res;
       this.currentPage = 1;
       this.updatePagination();
     });
   }
 
-  searchTour(){
-    this.tourService
-      .searchTour(this.searchName, this.searchStartDate, this.searchEndDate)
-      .subscribe(res => {
-        this.filteredTours = res;
-        this.currentPage = 1;
-        this.updatePagination();
-      })
+  search() {
+    this.filtered = this.tourDetails.filter(x =>
+      (!this.searchTour || x.tourName?.toLowerCase().includes(this.searchTour.toLowerCase())) &&
+      (!this.searchHotel || x.hotelName?.toLowerCase().includes(this.searchHotel.toLowerCase())) &&
+      (!this.searchVehicle || x.vehicleName?.toLowerCase().includes(this.searchVehicle.toLowerCase()))
+    );
+
+    this.currentPage = 1;
+    this.pageInput = null;
+    this.updatePagination();
+  }
+
+  reset() {
+    this.searchTour = '';
+    this.searchHotel = '';
+    this.searchVehicle = '';
+    this.load();
   }
 
   updatePagination() {
-    this.totalPages = Math.ceil(this.filteredTours.length / this.pageSize);
+    this.totalPages = Math.ceil(this.filtered.length / this.pageSize);
 
     if (this.totalPages === 0) {
-      this.pagedTours = [];
+      this.paged = [];
       this.visiblePages = [];
-      this.currentPage = 1;
       return;
     }
 
@@ -76,7 +86,6 @@ export class AdminTourComponent {
   }
 
   changePage(page: number) {
-
     if (page < 1 || page > this.totalPages) return;
 
     this.currentPage = page;
@@ -84,14 +93,13 @@ export class AdminTourComponent {
     const start = (page - 1) * this.pageSize;
     const end = start + this.pageSize;
 
-    this.pagedTours = this.filteredTours.slice(start, end);
+    this.paged = this.filtered.slice(start, end);
 
     this.calculateVisiblePages();
   }
 
   private calculateVisiblePages() {
     const range = 1;
-
     let start = this.currentPage - range;
     let end = this.currentPage + range;
 
@@ -131,24 +139,17 @@ export class AdminTourComponent {
     this.pageInput = null;
   }
 
-  resetFilters() {
-    this.searchName = '';
-    this.searchStartDate = '';
-    this.searchEndDate = '';
-    this.loadTours()      ;
-  }
-
   goToCreate() {
-    this.router.navigate(['/admin/tours/create']);
+    this.router.navigate(['/manager/tour-details/create']);
   }
 
   goToEdit(id: number) {
-    this.router.navigate(['/admin/tours/edit', id]);
+    this.router.navigate(['/manager/tour-details/edit', id]);
   }
 
-  deleteTour(id: number) {
+  delete(id: number) {
     Swal.fire({
-      title: 'Bạn có chắc chắn xóa tour?',
+      title: 'Xóa chi tiết tour?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Xóa',
@@ -156,28 +157,18 @@ export class AdminTourComponent {
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
       reverseButtons: true
-    }).then((result) => {
-
+    }).then(result => {
       if (result.isConfirmed) {
-
-        this.tourService.deleteTour(id).subscribe({
-
+        this.service.delete(id).subscribe({
           next: () => {
-            this.toastr.success('Xóa tour thành công', 'Thành công');
-            this.loadTours();
+            this.toastr.success('Xóa chi tiết tour thành công', 'Thành công');
+            this.load();
           },
-
-          error: (err) => {
-            this.toastr.error(
-              err?.error?.message || 'Không thể xóa tour',
-              'Lỗi'
-            );
+          error: () => {
+            this.toastr.error('Xóa chi tiết tour thất bại', 'Lỗi');
           }
-
         });
-
       }
-
     });
   }
 }

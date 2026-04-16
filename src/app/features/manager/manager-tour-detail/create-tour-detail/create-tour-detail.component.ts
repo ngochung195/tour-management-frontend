@@ -1,0 +1,79 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+
+import { TourService } from '../../../../services/tour.service';
+import { HotelService } from '../../../../services/hotel.service';
+import { VehicleService } from '../../../../services/vehicle.service';
+import { TourDetailService } from '../../../../services/tour-detail.service';
+
+@Component({
+  selector: 'app-manager-create-tour-detail',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './create-tour-detail.component.html',
+  styleUrl: './create-tour-detail.component.scss'
+})
+export class ManagerCreateTourDetailComponent implements OnInit {
+
+  tourDetail: any = {
+    tourId: null,
+    hotelId: null,
+    vehicleId: null
+  };
+
+  tours: any[] = [];
+  hotels: any[] = [];
+  vehicles: any[] = [];
+
+  constructor(
+    private tourDetailService: TourDetailService,
+    private tourService: TourService,
+    private hotelService: HotelService,
+    private vehicleService: VehicleService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData() {
+    this.tourService.getAll().subscribe(res => this.tours = res);
+
+    this.hotelService.getAll().subscribe(res => this.hotels = res);
+
+    this.vehicleService.getAll().subscribe(res => this.vehicles = res);
+  }
+
+  goBack() {
+    this.router.navigate(['/manager/tour-details']);
+  }
+
+  saveTourDetail() {
+
+    if (!this.tourDetail.tourId || !this.tourDetail.hotelId || !this.tourDetail.vehicleId) {
+      this.toastr.warning('Vui lòng chọn đầy đủ Tour - Hotel - Vehicle');
+      return;
+    }
+
+    const data = {
+      tourId: this.tourDetail.tourId,
+      hotelId: this.tourDetail.hotelId,
+      vehicleId: this.tourDetail.vehicleId
+    };
+
+    this.tourDetailService.create(data).subscribe({
+      next: () => {
+        this.toastr.success('Thêm tour detail thành công');
+        this.router.navigate(['/manager/tour-details']);
+      },
+      error: (err) => {
+        this.toastr.error(err?.error?.message || 'Thêm thất bại');
+      }
+    });
+  }
+}

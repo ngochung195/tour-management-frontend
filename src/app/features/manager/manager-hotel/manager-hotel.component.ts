@@ -1,65 +1,94 @@
 import { Component, OnInit } from '@angular/core';
+import { HotelService } from '../../../services/hotel.service';
+import { Hotel } from '../../../models/hotel.model';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ManagerCategoryService } from '../../../services/category.service';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import Swal from 'sweetalert2';
-import { Category } from '../../../models/category.model.';
 
 @Component({
-  selector: 'app-manager-category',
+  selector: 'app-manager-hotel',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './manager-category.component.html',
-  styleUrl: './manager-category.component.scss'
+  templateUrl: './manager-hotel.component.html',
+  styleUrl: './manager-hotel.component.scss'
 })
-export class ManagerCategoryComponent {
-  categories: Category[] = [];
-  filteredCategories: Category[] = [];
-  pagedCategories: Category[] = [];
+export class ManagerHotelComponent implements OnInit {
+
+  hotels: Hotel[] = [];
+  filteredHotels: Hotel[] = [];
+  pagedHotels: Hotel[] = [];
 
   searchName: string = '';
-  searchStartDate: string = '';
-  searchEndDate: string = '';
+  searchAddress: string = '';
 
   currentPage = 1;
   pageSize = 5;
   totalPages = 0;
   visiblePages: number[] = [];
+
   pageInput: number | null = null;
 
   constructor(
-    private managerCategoryService: ManagerCategoryService,
+    private hotelService: HotelService,
     private toastr: ToastrService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.loadCategories();
+    this.loadHotels();
   }
 
-  loadCategories() {
-    this.managerCategoryService.getAllCategories().subscribe(res => {
-      this.categories = res;
-      this.applyFilters();
+  loadHotels() {
+    this.hotelService.getAll().subscribe({
+      next: (res) => {
+        this.hotels = res;
+        this.filteredHotels = res;
+        this.currentPage = 1;
+        this.pageInput = null;
+        this.updatePagination();
+      },
+      error: () => {
+        this.toastr.error('Không tải được danh sách khách sạn');
+      }
     });
   }
 
-  applyFilters() {
-    this.filteredCategories = this.categories.filter(c => {
-      return (!this.searchName || c.categoryName.toLowerCase().includes(this.searchName.toLocaleLowerCase()));
+  searchHotel() {
+    this.filteredHotels = this.hotels.filter(h => {
+
+      const matchName = this.searchName
+        ? h.hotelName.toLowerCase().includes(this.searchName.toLowerCase())
+        : true;
+
+      const matchAddress = this.searchAddress
+        ? h.address.toLowerCase().includes(this.searchAddress.toLowerCase())
+        : true;
+
+      return matchName && matchAddress;
     });
+
+    this.currentPage = 1;
+    this.pageInput = null;
+    this.updatePagination();
+  }
+
+  resetFilters() {
+    this.searchName = '';
+    this.searchAddress = '';
+
+    this.filteredHotels = this.hotels;
     this.currentPage = 1;
     this.pageInput = null;
     this.updatePagination();
   }
 
   updatePagination() {
-    this.totalPages = Math.ceil(this.filteredCategories.length / this.pageSize);
+    this.totalPages = Math.ceil(this.filteredHotels.length / this.pageSize);
 
     if (this.totalPages === 0) {
-      this.pagedCategories = [];
+      this.pagedHotels = [];
       this.visiblePages = [];
       this.currentPage = 1;
       return;
@@ -73,7 +102,6 @@ export class ManagerCategoryComponent {
   }
 
   changePage(page: number) {
-
     if (page < 1 || page > this.totalPages) return;
 
     this.currentPage = page;
@@ -81,8 +109,7 @@ export class ManagerCategoryComponent {
     const start = (page - 1) * this.pageSize;
     const end = start + this.pageSize;
 
-    this.pagedCategories = this.filteredCategories.slice(start, end);
-
+    this.pagedHotels = this.filteredHotels.slice(start, end);
     this.calculateVisiblePages();
   }
 
@@ -128,45 +155,38 @@ export class ManagerCategoryComponent {
     this.pageInput = null;
   }
 
-  resetFilters() {
-    this.searchName = '';
-    this.searchStartDate = '';
-    this.searchEndDate = '';
-    this.applyFilters();
-  }
-
   goToCreate() {
-    this.router.navigate(['/manager/categories/create']);
+    this.router.navigate(['/manager/hotels/create']);
   }
 
   goToEdit(id: number) {
-    this.router.navigate(['/manager/categories/edit', id]);
+    this.router.navigate(['/manager/hotels/edit', id]);
   }
 
-  deleteCategory(id: number) {
+  deleteHotel(id: number) {
     Swal.fire({
-      title: 'Bạn có chắc chắn xóa danh mục?',
+      title: 'Bạn có chắc chắn?',
+      text: 'Xóa khách sạn này?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Xóa',
       cancelButtonText: 'Hủy',
       confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      reverseButtons: true
-    }).then((result) => {
+      cancelButtonColor: '#3085d6'
+    }).then(result => {
 
       if (result.isConfirmed) {
 
-        this.managerCategoryService.deleteCategory(id).subscribe({
+        this.hotelService.deleteHotel(id).subscribe({
 
           next: () => {
-            this.toastr.success('Xóa danh mục thành công', 'Thành công');
-            this.loadCategories();
+            this.toastr.success('Xóa khách sạn thành công', 'Thành công');
+            this.loadHotels();
           },
 
           error: (err) => {
             this.toastr.error(
-              err?.error?.message || 'Không thể xóa danh mục',
+              err?.error?.message || 'Không thể xóa khách sạn',
               'Lỗi'
             );
           }
