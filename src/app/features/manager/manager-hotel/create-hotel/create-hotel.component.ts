@@ -4,7 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HotelService } from '../../../../services/hotel.service';
 import { ToastrService } from 'ngx-toastr';
-import { Hotel } from '../../../../models/hotel.model';
+
+import { ValidationUtil } from '../../../../shared/utils/validation.util';
+import { ToastUtil } from '../../../../shared/utils/toast.util';
 
 @Component({
   selector: 'app-manager-create-hotel',
@@ -32,18 +34,19 @@ export class ManagerCreateHotelComponent {
   }
 
   validateForm(): boolean {
-    if (!this.hotel.hotelName.trim()) {
-      this.toastr.warning('Tên khách sạn không được để trống');
+
+    if (ValidationUtil.isEmpty(this.hotel.hotelName)) {
+      ToastUtil.warning(this.toastr, 'Tên khách sạn không được để trống');
       return false;
     }
 
-    if (!this.hotel.address.trim()) {
-      this.toastr.warning('Địa chỉ không được để trống');
+    if (ValidationUtil.isEmpty(this.hotel.address)) {
+      ToastUtil.warning(this.toastr, 'Địa chỉ không được để trống');
       return false;
     }
 
     if (this.hotel.description && this.hotel.description.length > 100) {
-      this.toastr.warning('Mô tả tối đa 100 ký tự');
+      ToastUtil.warning(this.toastr, 'Mô tả tối đa 100 ký tự');
       return false;
     }
 
@@ -51,15 +54,19 @@ export class ManagerCreateHotelComponent {
   }
 
   saveHotel() {
+
     if (!this.validateForm()) return;
 
     this.hotelService.createHotel(this.hotel).subscribe({
       next: () => {
-        this.toastr.success('Thêm khách sạn thành công');
+        ToastUtil.success(this.toastr, 'Thêm khách sạn thành công');
         this.router.navigate(['/manager/hotels']);
       },
       error: (err) => {
-        this.toastr.error(err?.error?.message || 'Thêm khách sạn thất bại');
+        ToastUtil.error(
+          this.toastr,
+          err?.error?.message || 'Không thể thêm khách sạn'
+        );
       }
     });
   }

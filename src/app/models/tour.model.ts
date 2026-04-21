@@ -3,6 +3,8 @@ export interface Tour {
     categoryId: number;
     categoryName: string;
     tourName: string;
+    hotelName?: string;
+    vehicleName?: string;
     quantity: number;
     startDate: string;
     endDate: string;

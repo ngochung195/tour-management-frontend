@@ -3,13 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { VehicleService} from '../../../../services/vehicle.service';
+import { VehicleService } from '../../../../services/vehicle.service';
 
-export interface Vehicle {
-  id: number;
-  vehicleName: string;
-  description: string;
-}
+import { ValidationUtil } from '../../../../shared/utils/validation.util';
+import { ToastUtil } from '../../../../shared/utils/toast.util';
 
 @Component({
   selector: 'app-edit-vehicle',
@@ -34,9 +31,7 @@ export class ManagerEditVehicleComponent implements OnInit {
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (id) {
-      this.loadVehicle(id);
-    }
+    if (id) this.loadVehicle(id);
   }
 
   loadVehicle(id: number) {
@@ -45,19 +40,38 @@ export class ManagerEditVehicleComponent implements OnInit {
         this.vehicle = res;
       },
       error: () => {
-        this.toastr.error('Không tìm thấy phương tiện');
+        ToastUtil.error(this.toastr, 'Không tìm thấy phương tiện');
+        this.router.navigate(['/manager/vehicles']);
       }
     });
   }
 
+  validateForm(): boolean {
+
+    if (ValidationUtil.isEmpty(this.vehicle.vehicleName)) {
+      ToastUtil.warning(this.toastr, 'Vui lòng nhập tên phương tiện');
+      return false;
+    }
+
+    if (this.vehicle.description && this.vehicle.description.length > 200) {
+      ToastUtil.warning(this.toastr, 'Mô tả tối đa 200 ký tự');
+      return false;
+    }
+
+    return true;
+  }
+
   saveVehicle() {
+
+    if (!this.validateForm()) return;
+
     this.vehicleService.updateVehicle(this.vehicle.id, this.vehicle).subscribe({
       next: () => {
-        this.toastr.success('Cập nhật phương tiện thành công');
+        ToastUtil.success(this.toastr, 'Cập nhật phương tiện thành công');
         this.router.navigate(['/manager/vehicles']);
       },
       error: () => {
-        this.toastr.error('Cập nhật thất bại');
+        ToastUtil.error(this.toastr, 'Cập nhật thất bại');
       }
     });
   }

@@ -5,6 +5,9 @@ import { Router } from '@angular/router';
 import { ManagerCategoryService } from '../../../../services/category.service';
 import { ToastrService } from 'ngx-toastr';
 
+import { ValidationUtil } from '../../../../shared/utils/validation.util';
+import { ToastUtil } from '../../../../shared/utils/toast.util';
+
 @Component({
   selector: 'app-manager-create-category',
   standalone: true,
@@ -13,6 +16,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './create-category.component.scss'
 })
 export class ManagerCreateCategoryComponent {
+
   category: any = {
     categoryName: '',
     decription: ''
@@ -22,16 +26,26 @@ export class ManagerCreateCategoryComponent {
     private managerCategoryService: ManagerCategoryService,
     private router: Router,
     private toastr: ToastrService
-  ) { }
+  ) {}
 
   saveCategory() {
+
+    if (ValidationUtil.isEmpty(this.category.categoryName)) {
+      ToastUtil.warning(this.toastr, 'Tên danh mục không được để trống');
+      return;
+    }
+
+
     this.managerCategoryService.createCategory(this.category).subscribe({
       next: () => {
-        this.toastr.success('Thêm danh mục thành công');
+        ToastUtil.success(this.toastr, 'Thêm danh mục thành công');
         this.router.navigate(['/manager/categories']);
       },
       error: (err) => {
-        this.toastr.error(err?.error?.message || 'Thêm danh mục thất bại');
+        ToastUtil.error(
+          this.toastr,
+          err?.error?.message || 'Không thể thêm danh mục'
+        );
       }
     });
   }
@@ -39,6 +53,4 @@ export class ManagerCreateCategoryComponent {
   goBack() {
     this.router.navigate(['/manager/categories']);
   }
-
-
 }

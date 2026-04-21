@@ -16,7 +16,7 @@
     <div class="form-group">
       <label>Khách sạn</label>
       <select [(ngModel)]="tourDetail.hotelId" name="hotelId" required>
-        <option [ngValue]="0">Chọn hotel</option>
+        <option [ngValue]="0">Chọn khách sạn</option>
         <option *ngFor="let h of hotels" [ngValue]="h.id">
           {{ h.hotelName }}
         </option>
@@ -26,7 +26,7 @@
     <div class="form-group">
       <label>Phương tiện</label>
       <select [(ngModel)]="tourDetail.vehicleId" name="vehicleId" required>
-        <option [ngValue]="0">Chọn vehicle</option>
+        <option [ngValue]="0">Chọn phương tiện</option>
         <option *ngFor="let v of vehicles" [ngValue]="v.id">
           {{ v.vehicleName }}
         </option>

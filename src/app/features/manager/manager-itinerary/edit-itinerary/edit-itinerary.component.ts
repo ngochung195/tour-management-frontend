@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 
 import { TourService } from '../../../../services/tour.service';
 import { ItineraryService } from '../../../../services/itinerary.service';
-import { ItineraryRequest } from '../../../../models/itinerary.model';
+import { ToastrService } from 'ngx-toastr';
+
+import { ToastUtil } from '../../../../shared/utils/toast.util';
+import { ValidationUtil } from '../../../../shared/utils/validation.util';
 
 @Component({
   selector: 'app-edit-itinerary',
@@ -19,7 +21,6 @@ export class ManagerEditItineraryComponent implements OnInit {
 
   tours: any[] = [];
   tourId: number | null = null;
-
   activities: any[] = [];
 
   constructor(
@@ -32,21 +33,20 @@ export class ManagerEditItineraryComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.tourService.getAll().subscribe(res => {
-      this.tours = res;
-    });
+    this.tourService.getAll().subscribe(res => this.tours = res);
 
-    const tourId = Number(this.route.snapshot.paramMap.get('tourId'));
-    if (tourId) {
-      this.tourId = tourId;
+    const id = Number(this.route.snapshot.paramMap.get('tourId'));
 
-      this.itineraryService.getByTour(tourId).subscribe(res => {
-        this.activities = res.map(item => ({
-          id: item.id, // 🔥 QUAN TRỌNG
-          dayNumber: item.dayNumber,
-          time: item.time,
-          activity: item.activity,
-          description: item.description
+    if (id) {
+      this.tourId = id;
+
+      this.itineraryService.getByTour(id).subscribe(res => {
+        this.activities = res.map(i => ({
+          id: i.id,
+          dayNumber: i.dayNumber,
+          time: i.time?.slice(0, 5),
+          activity: i.activity,
+          description: i.description
         }));
       });
     }
@@ -70,12 +70,17 @@ export class ManagerEditItineraryComponent implements OnInit {
 
   updateItinerary() {
 
-    if (!this.tourId || this.activities.length === 0) {
-      this.toastr.warning('Vui lòng nhập dữ liệu');
+    if (!this.tourId) {
+      ToastUtil.warning(this.toastr, 'Thiếu tour');
       return;
     }
 
-    const payload: ItineraryRequest[] = this.activities.map(a => ({
+    if (this.activities.length === 0) {
+      ToastUtil.warning(this.toastr, 'Không có dữ liệu');
+      return;
+    }
+
+    const payload = this.activities.map(a => ({
       id: a.id,
       tourId: this.tourId!,
       dayNumber: Number(a.dayNumber),
@@ -84,13 +89,13 @@ export class ManagerEditItineraryComponent implements OnInit {
       description: a.description
     }));
 
-    this.itineraryService.updateItinerary(this.tourId!, payload).subscribe({
+    this.itineraryService.updateItinerary(this.tourId, payload).subscribe({
       next: () => {
-        this.toastr.success('Cập nhật thành công');
+        ToastUtil.success(this.toastr, 'Cập nhật thành công');
         this.router.navigate(['/manager/itineraries']);
       },
       error: (err) => {
-        this.toastr.error(err?.error?.message || 'Cập nhật thất bại');
+        ToastUtil.error(this.toastr, err?.error?.message || 'Cập nhật thất bại');
       }
     });
   }

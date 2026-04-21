@@ -13,7 +13,7 @@ export class ManagerCategoryService {
   constructor(private http: HttpClient) { }
 
   getAllCategories(): Observable<any[]> {
-    return this.http.get<any[]>(this.api);
+    return this.http.get<Category[]>(this.api);
   }
 
   getCategoryById(id: number): Observable<Category> {

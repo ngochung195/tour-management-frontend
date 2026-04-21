@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BookingService } from '../../../services/booking.service';
 import { Booking } from '../../../models/booking.model';
+import {ToastUtil} from '../../../shared/utils/toast.util';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-manager-booking',
@@ -28,24 +30,41 @@ export class ManagerBookingComponent implements OnInit {
   visiblePages: number[] = [];
   pageInput: number | null = null;
 
-  constructor(private bookingService: BookingService) { }
+  constructor(
+    private bookingService: BookingService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.loadBookings();
   }
 
   loadBookings() {
-    this.bookingService.getAll().subscribe(data => {
-      console.log(data);
-      this.bookings = data;
-      this.filteredBookings = [...data];
-      this.updatePagination();
+    this.bookingService.getAll().subscribe({
+      next: (data) => {
+        this.bookings = data;
+        this.filteredBookings = [...data];
+        this.updatePagination();
+      },
+      error: () => {
+        ToastUtil.error(this.toastr, 'Không thể tải danh sách booking');
+      }
     });
   }
 
   updateStatus(id: number, status: string) {
-    this.bookingService.updateStatus(id, status).subscribe(() => {
-      this.loadBookings();
+
+    this.bookingService.updateStatus(id, status).subscribe({
+      next: () => {
+        ToastUtil.success(this.toastr, 'Cập nhật trạng thái thành công');
+        this.loadBookings();
+      },
+      error: (err) => {
+        ToastUtil.error(
+          this.toastr,
+          err?.error?.message || 'Không thể cập nhật trạng thái'
+        );
+      }
     });
   }
 

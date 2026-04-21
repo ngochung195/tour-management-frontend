@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import Swal from 'sweetalert2';
 
 import { TourService } from '../../../services/tour.service';
 import { ItineraryService } from '../../../services/itinerary.service';
-import { Tour } from '../../../models/tour.model';
-import { Itinerary } from '../../../models/itinerary.model';
+import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
+
+import { ToastUtil } from '../../../shared/utils/toast.util';
 
 @Component({
   selector: 'app-manager-itinerary',
@@ -19,10 +19,11 @@ import { Itinerary } from '../../../models/itinerary.model';
 })
 export class ManagerItineraryComponent implements OnInit {
 
-  tours: Tour[] = [];
-  itineraries: Itinerary[] = [];
-  filteredTours: Tour[] = [];
-  pagedTours: Tour[] = [];
+  tours: any[] = [];
+  itineraries: any[] = [];
+
+  filteredTours: any[] = [];
+  pagedTours: any[] = [];
 
   expandedTourId: number | null = null;
 
@@ -47,34 +48,35 @@ export class ManagerItineraryComponent implements OnInit {
     this.loadAll();
   }
 
-  applyFilter() {
-    if (!this.tours.length) return;
-    if (!this.itineraries.length) return;
+  loadAll() {
 
-    this.filteredTours = this.tours.filter(tour =>
-      this.itineraries.some(it => it.tourId === tour.id)
+    this.tourService.getAll().subscribe(res => {
+      this.tours = res;
+      this.applyFilter();
+    });
+
+    this.itineraryService.getAll().subscribe(res => {
+      this.itineraries = res;
+      this.applyFilter();
+    });
+  }
+
+  applyFilter() {
+
+    if (!this.tours.length || !this.itineraries.length) return;
+
+    this.filteredTours = this.tours.filter(t =>
+      this.itineraries.some(i => i.tourId === t.id)
     );
 
     this.updatePagination();
-  }
-
-  loadAll() {
-    this.tourService.getAll().subscribe(t => {
-      this.tours = t;
-      this.applyFilter();
-    });
-
-    this.itineraryService.getAll().subscribe(i => {
-      this.itineraries = i;
-      this.applyFilter();
-    });
   }
 
   toggleExpand(id: number) {
     this.expandedTourId = this.expandedTourId === id ? null : id;
   }
 
-  getItineraries(tourId: number): Itinerary[] {
+  getItineraries(tourId: number) {
     return this.itineraries
       .filter(i => i.tourId === tourId)
       .sort((a, b) =>
@@ -82,18 +84,17 @@ export class ManagerItineraryComponent implements OnInit {
       );
   }
 
-  formatTime(time: string): string {
-    return time?.substring(0, 5);
-  }
-
   searchTour() {
-    this.tourService
-      .searchTour(this.searchName, this.searchStartDate, this.searchEndDate)
-      .subscribe(res => {
-        this.filteredTours = res;
-        this.currentPage = 1;
-        this.updatePagination();
-      });
+
+    this.tourService.searchTour(
+      this.searchName,
+      this.searchStartDate,
+      this.searchEndDate
+    ).subscribe(res => {
+      this.filteredTours = res;
+      this.currentPage = 1;
+      this.updatePagination();
+    });
   }
 
   resetFilters() {
@@ -104,6 +105,7 @@ export class ManagerItineraryComponent implements OnInit {
   }
 
   updatePagination() {
+
     this.totalPages = Math.ceil(this.filteredTours.length / this.pageSize);
 
     if (this.totalPages === 0) {
@@ -116,6 +118,7 @@ export class ManagerItineraryComponent implements OnInit {
   }
 
   changePage(page: number) {
+
     if (page < 1 || page > this.totalPages) return;
 
     this.currentPage = page;
@@ -128,7 +131,13 @@ export class ManagerItineraryComponent implements OnInit {
     this.calculateVisiblePages();
   }
 
+  formatTime(time: string): string {
+    if (!time) return '';
+    return time.substring(0, 5); // HH:mm
+  }
+
   calculateVisiblePages() {
+
     const range = 1;
 
     let start = this.currentPage - range;
@@ -145,31 +154,60 @@ export class ManagerItineraryComponent implements OnInit {
     }
 
     this.visiblePages = [];
+
     for (let i = start; i <= end; i++) {
       this.visiblePages.push(i);
     }
   }
 
-  getMaxDay(tourId: number): number {
-    const itineraries = this.getItineraries(tourId);
+  deleteItinerary(id: number) {
 
-    if (!itineraries || itineraries.length === 0) {
-      return 0;
-    }
+    Swal.fire({
+      title: 'Xóa lịch trình?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xóa'
+    }).then(result => {
 
-    return Math.max(...itineraries.map(i => i.dayNumber));
+      if (!result.isConfirmed) return;
+
+      this.itineraryService.deleteItinerary(id).subscribe({
+        next: () => {
+          ToastUtil.success(this.toastr, 'Xóa thành công');
+          this.itineraries = this.itineraries.filter(i => i.id !== id);
+          this.applyFilter();
+        },
+        error: (err) => {
+          ToastUtil.error(this.toastr, err?.error?.message || 'Xóa thất bại');
+        }
+      });
+
+    });
   }
 
-  goToPage() {
-    if (this.pageInput === null) return;
+  deleteByTour(tourId: number) {
 
-    let page = this.pageInput;
+    Swal.fire({
+      title: 'Xóa toàn bộ lịch trình?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xóa'
+    }).then(result => {
 
-    if (page < 1) page = 1;
-    if (page > this.totalPages) page = this.totalPages;
+      if (!result.isConfirmed) return;
 
-    this.changePage(page);
-    this.pageInput = null;
+      this.itineraryService.deleteByTour(tourId).subscribe({
+        next: () => {
+          ToastUtil.success(this.toastr, 'Đã xóa toàn bộ lịch trình');
+          this.itineraries = this.itineraries.filter(i => i.tourId !== tourId);
+          this.applyFilter();
+        },
+        error: (err) => {
+          ToastUtil.error(this.toastr, err?.error?.message || 'Không thể xóa toàn bộ lịch trình');
+        }
+      });
+
+    });
   }
 
   goToCreate() {
@@ -180,68 +218,23 @@ export class ManagerItineraryComponent implements OnInit {
     this.router.navigate(['/manager/itineraries/edit', id]);
   }
 
-  deleteItinerary(id: number) {
-    Swal.fire({
-      title: 'Bạn có chắc chắn xóa lịch trình?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Xóa',
-      cancelButtonText: 'Hủy',
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.itineraryService.deleteItinerary(id).subscribe({
-          next: () => {
-            this.toastr.success('Xóa lịch trình thành công', 'Thành công');
+  goToPage() {
 
-            this.itineraries = this.itineraries.filter(i => i.id !== id);
+    if (!this.pageInput) return;
 
-            this.applyFilter();
-          },
-          error: (err) => {
-            this.toastr.error(
-              err?.error?.message || 'Không thể xóa lịch trình',
-              'Lỗi'
-            );
-          }
-        });
-      }
-    });
+    let page = this.pageInput;
+
+    if (page < 1) page = 1;
+    if (page > this.totalPages) page = this.totalPages;
+
+    this.changePage(page);
+    this.pageInput = null;
   }
 
-  deleteByTour(tourId: number) {
-    Swal.fire({
-      title: 'Xóa toàn bộ lịch trình?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Xóa',
-      cancelButtonText: 'Hủy',
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.itineraryService.deleteByTour(tourId).subscribe({
-          next: () => {
-            this.toastr.success('Đã xóa toàn bộ lịch trình');
+  getMaxDay(tourId: number): number {
 
-            this.itineraries = this.itineraries.filter(i => i.tourId !== tourId);
+    const list = this.getItineraries(tourId);
 
-            this.filteredTours = this.tours.filter(t =>
-              this.itineraries.some(it => it.tourId === t.id)
-            );
-
-            this.expandedTourId = null;
-            this.currentPage = 1;
-
-            this.updatePagination();
-          },
-          error: (err) => {
-            this.toastr.error(err?.error?.message || 'Xóa toàn bộ lịch trình thất bại');
-          }
-        });
-      }
-    });
+    return list.length ? Math.max(...list.map(i => i.dayNumber)) : 0;
   }
 }

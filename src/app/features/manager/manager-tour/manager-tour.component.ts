@@ -7,20 +7,25 @@ import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { Tour } from '../../../models/tour.model';
 
+import { ToastUtil } from '../../../shared/utils/toast.util';
+
 @Component({
   selector: 'app-manager-tour',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './manager-tour.component.html',
   styleUrl: './manager-tour.component.scss'
 })
-export class ManagerTourComponent {
+export class ManagerTourComponent implements OnInit {
+
   tours: Tour[] = [];
   filteredTours: Tour[] = [];
   pagedTours: Tour[] = [];
 
-  searchName: string = '';
-  searchStartDate: string = '';
-  searchEndDate: string = '';
+  searchName = '';
+  searchStartDate = '';
+  searchEndDate = '';
+  categoryId: number | null = null;
 
   currentPage = 1;
   pageSize = 5;
@@ -32,31 +37,48 @@ export class ManagerTourComponent {
     private tourService: TourService,
     private toastr: ToastrService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadTours();
   }
 
   loadTours() {
-    this.tourService.getAll().subscribe(res => {
-      this.tours = res;
+    this.tourService.getAll().subscribe({
+      next: (res) => {
+        this.tours = res;
+        this.filteredTours = res;
+        this.currentPage = 1;
+        this.updatePagination();
+      },
+      error: () => {
+        ToastUtil.error(this.toastr, 'Không thể tải danh sách tour');
+      }
+    });
+  }
+
+  searchTour() {
+    this.tourService.searchTour(
+      this.searchName || undefined,
+      this.searchStartDate || undefined,
+      this.searchEndDate || undefined,
+      this.categoryId ?? undefined
+    ).subscribe(res => {
       this.filteredTours = res;
       this.currentPage = 1;
+      this.pageInput = null;
       this.updatePagination();
     });
   }
 
- searchTour(){
-    this.tourService
-        .searchTour(this.searchName, this.searchStartDate, this.searchEndDate)
-      .subscribe(res =>{
-        this.filteredTours = res;
-        this.currentPage = 1;
-        this.pageInput = null;
-        this.updatePagination();
-      });
- }
+  resetFilters() {
+    this.searchName = '';
+    this.searchStartDate = '';
+    this.searchEndDate = '';
+    this.categoryId = null;
+
+    this.loadTours();
+  }
 
   updatePagination() {
     this.totalPages = Math.ceil(this.filteredTours.length / this.pageSize);
@@ -76,7 +98,6 @@ export class ManagerTourComponent {
   }
 
   changePage(page: number) {
-
     if (page < 1 || page > this.totalPages) return;
 
     this.currentPage = page;
@@ -90,6 +111,7 @@ export class ManagerTourComponent {
   }
 
   private calculateVisiblePages() {
+
     const range = 1;
 
     let start = this.currentPage - range;
@@ -106,36 +128,22 @@ export class ManagerTourComponent {
     }
 
     this.visiblePages = [];
+
     for (let i = start; i <= end; i++) {
       this.visiblePages.push(i);
     }
   }
 
   goToPage() {
-    if (this.pageInput === null) {
-      return;
-    }
+    if (!this.pageInput) return;
 
     let page = this.pageInput;
 
-    if (page < 1) {
-      page = 1;
-    }
-
-    if (page > this.totalPages) {
-      page = this.totalPages;
-    }
+    if (page < 1) page = 1;
+    if (page > this.totalPages) page = this.totalPages;
 
     this.changePage(page);
-
     this.pageInput = null;
-  }
-
-  resetFilters() {
-    this.searchName = '';
-    this.searchStartDate = '';
-    this.searchEndDate = '';
-    this.loadTours();
   }
 
   goToCreate() {
@@ -147,36 +155,27 @@ export class ManagerTourComponent {
   }
 
   deleteTour(id: number) {
+
     Swal.fire({
       title: 'Bạn có chắc chắn xóa tour?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Xóa',
       cancelButtonText: 'Hủy',
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      reverseButtons: true
-    }).then((result) => {
+      confirmButtonColor: '#d33'
+    }).then(result => {
 
-      if (result.isConfirmed) {
+      if (!result.isConfirmed) return;
 
-        this.tourService.deleteTour(id).subscribe({
-
-          next: () => {
-            this.toastr.success('Xóa tour thành công', 'Thành công');
-            this.loadTours();
-          },
-
-          error: (err) => {
-            this.toastr.error(
-              err?.error?.message || 'Không thể xóa tour',
-              'Lỗi'
-            );
-          }
-
-        });
-
-      }
+      this.tourService.deleteTour(id).subscribe({
+        next: () => {
+          ToastUtil.success(this.toastr, 'Xóa tour thành công');
+          this.loadTours();
+        },
+        error: (err) => {
+          ToastUtil.error(this.toastr, err?.error?.message || 'Không thể xóa tour');
+        }
+      });
 
     });
   }

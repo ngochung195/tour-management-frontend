@@ -15,7 +15,8 @@
 
       <p><strong>Ngày bắt đầu:</strong> {{ tour.startDate | date:'dd/MM/yyyy' }}</p>
       <p><strong>Ngày kết thúc:</strong> {{ tour.endDate | date:'dd/MM/yyyy' }}</p>
-      <p><strong>Khách sạn:</strong></p>
+      <p><strong>Khách sạn:</strong> {{ tour.hotelName || 'Chưa có khách sạn' }}</p>
+      <p><strong>Phương tiện:</strong> {{ tour.vehicleName || 'Chưa có phương tiện' }}</p>
 
       <p class="description">
         {{ tour.description }}
@@ -25,6 +26,39 @@
               [routerLink]="['/booking', tour.id]">
         Đặt ngay
       </button>
+
+    </div>
+
+  </div>
+
+  <!-- ITINERARY -->
+  <div class="itinerary" *ngIf="groupedItineraries.length > 0">
+
+    <h3 class="itinerary-title">Lịch trình tour</h3>
+
+    <div *ngFor="let day of groupedItineraries" class="day-block">
+
+      <!-- Ngày + Date -->
+      <h4 class="day-title">
+        Ngày {{ day.dayNumber }}
+        <span *ngIf="day.date">
+        ({{ day.date | date:'dd/MM/yyyy' }})
+      </span>
+      </h4>
+
+      <!-- Danh sách hoạt động -->
+      <div class="activity" *ngFor="let item of day.items">
+
+        <div class="time">
+          {{ item.time }}
+        </div>
+
+        <div class="content">
+          <h5>{{ item.title }}</h5>
+          <p>{{ item.description }}</p>
+        </div>
+
+      </div>
 
     </div>
 

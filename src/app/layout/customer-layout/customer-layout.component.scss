@@ -58,6 +58,14 @@
       &:hover::after {
         width: 100%;
       }
+
+      &.active {
+        color: #ff7a00;
+      }
+
+      &.active::after {
+        width: 100%;
+      }
     }
   }
 

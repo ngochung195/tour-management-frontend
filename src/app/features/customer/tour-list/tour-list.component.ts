@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { TourService } from '../../../services/tour.service';
 import { Tour } from '../../../models/tour.model';
-import { NgFor} from '@angular/common';
-import { CommonModule } from '@angular/common';
+import { NgFor, CommonModule } from '@angular/common';
 import { RouterLink, RouterModule } from '@angular/router';
-import {FormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { Category} from '../../../models/category.model.';
+import {ManagerCategoryService} from '../../../services/category.service';
 
 @Component({
   selector: 'app-tour-list',
@@ -14,6 +15,7 @@ import {FormsModule} from '@angular/forms';
   styleUrls: ['./tour-list.component.scss']
 })
 export class TourListComponent implements OnInit {
+
   tours: Tour[] = [];
   allTours: Tour[] = [];
 
@@ -22,18 +24,30 @@ export class TourListComponent implements OnInit {
   endDate: string = '';
   categoryId: number | null = null;
 
-  categories: { id: number, name: string }[] = [];
+  categories: Category[] = [];
 
   apiUrl = 'http://localhost:8080';
 
-
-  constructor(private tourService: TourService) { }
+  constructor(
+    private tourService: TourService,
+    private categoryService: ManagerCategoryService
+  ) {}
 
   ngOnInit(): void {
-    this.tourService.getAll().subscribe(data => {
-      this.tours = data;
-      this.allTours = data;
-      this.buildCategories();
+
+    this.categoryService.getAllCategories().subscribe({
+      next: (res) => {
+        this.categories = res;
+      },
+      error: (err) => console.error(err)
+    });
+
+    this.tourService.getAll().subscribe({
+      next: (data) => {
+        this.allTours = data;
+        this.tours = data;
+      },
+      error: (err) => console.error(err)
     });
   }
 
@@ -51,27 +65,17 @@ export class TourListComponent implements OnInit {
     return this.apiUrl + img;
   }
 
-  buildCategories() {
-    const map = new Map<number, string>();
-    this.tours.forEach(t => {
-      map.set(t.categoryId, t.categoryName);
-    });
-    this.categories = Array.from(map, ([id, name]) => ({ id, name }));
-  }
-
   search() {
     this.tourService.searchTour(
       this.keyword || undefined,
       this.startDate || undefined,
       this.endDate || undefined,
+      this.categoryId ?? undefined
     ).subscribe({
       next: (res) => {
         this.tours = res;
-        this.buildCategories();
       },
-      error: (err) => {
-        console.error(err);
-      }
+      error: (err) => console.error(err)
     });
   }
 
@@ -80,7 +84,7 @@ export class TourListComponent implements OnInit {
     this.startDate = '';
     this.endDate = '';
     this.categoryId = null;
+
     this.tours = this.allTours;
-    this.buildCategories();
   }
 }

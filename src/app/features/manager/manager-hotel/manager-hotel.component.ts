@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { HotelService } from '../../../services/hotel.service';
 import { Hotel } from '../../../models/hotel.model';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+
+import { ToastUtil } from '../../../shared/utils/toast.util';
 
 @Component({
   selector: 'app-manager-hotel',
@@ -20,14 +22,13 @@ export class ManagerHotelComponent implements OnInit {
   filteredHotels: Hotel[] = [];
   pagedHotels: Hotel[] = [];
 
-  searchName: string = '';
-  searchAddress: string = '';
+  searchName = '';
+  searchAddress = '';
 
   currentPage = 1;
   pageSize = 5;
   totalPages = 0;
   visiblePages: number[] = [];
-
   pageInput: number | null = null;
 
   constructor(
@@ -41,30 +42,28 @@ export class ManagerHotelComponent implements OnInit {
   }
 
   loadHotels() {
+
     this.hotelService.getAll().subscribe({
       next: (res) => {
         this.hotels = res;
         this.filteredHotels = res;
-        this.currentPage = 1;
-        this.pageInput = null;
         this.updatePagination();
       },
       error: () => {
-        this.toastr.error('Không tải được danh sách khách sạn');
+        ToastUtil.error(this.toastr, 'Không thể tải danh sách khách sạn');
       }
     });
   }
 
   searchHotel() {
+
     this.filteredHotels = this.hotels.filter(h => {
 
-      const matchName = this.searchName
-        ? h.hotelName.toLowerCase().includes(this.searchName.toLowerCase())
-        : true;
+      const matchName = !this.searchName ||
+        h.hotelName?.toLowerCase().includes(this.searchName.toLowerCase());
 
-      const matchAddress = this.searchAddress
-        ? h.address.toLowerCase().includes(this.searchAddress.toLowerCase())
-        : true;
+      const matchAddress = !this.searchAddress ||
+        h.address?.toLowerCase().includes(this.searchAddress.toLowerCase());
 
       return matchName && matchAddress;
     });
@@ -77,20 +76,17 @@ export class ManagerHotelComponent implements OnInit {
   resetFilters() {
     this.searchName = '';
     this.searchAddress = '';
-
-    this.filteredHotels = this.hotels;
-    this.currentPage = 1;
-    this.pageInput = null;
+    this.filteredHotels = [...this.hotels];
     this.updatePagination();
   }
 
   updatePagination() {
+
     this.totalPages = Math.ceil(this.filteredHotels.length / this.pageSize);
 
     if (this.totalPages === 0) {
       this.pagedHotels = [];
       this.visiblePages = [];
-      this.currentPage = 1;
       return;
     }
 
@@ -102,6 +98,7 @@ export class ManagerHotelComponent implements OnInit {
   }
 
   changePage(page: number) {
+
     if (page < 1 || page > this.totalPages) return;
 
     this.currentPage = page;
@@ -110,10 +107,12 @@ export class ManagerHotelComponent implements OnInit {
     const end = start + this.pageSize;
 
     this.pagedHotels = this.filteredHotels.slice(start, end);
+
     this.calculateVisiblePages();
   }
 
   private calculateVisiblePages() {
+
     const range = 1;
 
     let start = this.currentPage - range;
@@ -130,28 +129,22 @@ export class ManagerHotelComponent implements OnInit {
     }
 
     this.visiblePages = [];
+
     for (let i = start; i <= end; i++) {
       this.visiblePages.push(i);
     }
   }
 
   goToPage() {
-    if (this.pageInput === null) {
-      return;
-    }
+
+    if (!this.pageInput) return;
 
     let page = this.pageInput;
 
-    if (page < 1) {
-      page = 1;
-    }
-
-    if (page > this.totalPages) {
-      page = this.totalPages;
-    }
+    if (page < 1) page = 1;
+    if (page > this.totalPages) page = this.totalPages;
 
     this.changePage(page);
-
     this.pageInput = null;
   }
 
@@ -164,6 +157,7 @@ export class ManagerHotelComponent implements OnInit {
   }
 
   deleteHotel(id: number) {
+
     Swal.fire({
       title: 'Bạn có chắc chắn?',
       text: 'Xóa khách sạn này?',
@@ -171,29 +165,23 @@ export class ManagerHotelComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Xóa',
       cancelButtonText: 'Hủy',
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6'
+      confirmButtonColor: '#d33'
     }).then(result => {
 
-      if (result.isConfirmed) {
+      if (!result.isConfirmed) return;
 
-        this.hotelService.deleteHotel(id).subscribe({
-
-          next: () => {
-            this.toastr.success('Xóa khách sạn thành công', 'Thành công');
-            this.loadHotels();
-          },
-
-          error: (err) => {
-            this.toastr.error(
-              err?.error?.message || 'Không thể xóa khách sạn',
-              'Lỗi'
-            );
-          }
-
-        });
-
-      }
+      this.hotelService.deleteHotel(id).subscribe({
+        next: () => {
+          ToastUtil.success(this.toastr, 'Xóa khách sạn thành công');
+          this.loadHotels();
+        },
+        error: (err) => {
+          ToastUtil.error(
+            this.toastr,
+            err?.error?.message || 'Không thể xóa khách sạn'
+          );
+        }
+      });
 
     });
   }

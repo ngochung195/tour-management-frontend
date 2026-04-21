@@ -6,6 +6,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { RouterModule } from '@angular/router';
 
+import { ValidationUtil } from '../../../../shared/utils/validation.util';
+import { ToastUtil } from '../../../../shared/utils/toast.util';
+
 @Component({
   selector: 'app-manager-edit-tour',
   standalone: true,
@@ -19,12 +22,14 @@ export class ManagerEditTourComponent implements OnInit {
   selectedFile: File | null = null;
   previewUrl: string | null = null;
 
+  categories: any[] = [];
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private tourService: TourService,
     private toastr: ToastrService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadCategories();
@@ -37,8 +42,6 @@ export class ManagerEditTourComponent implements OnInit {
       });
     }
   }
-
-  categories: any[] = [];
 
   loadCategories() {
     this.tourService.getCategories().subscribe(res => {
@@ -59,7 +62,25 @@ export class ManagerEditTourComponent implements OnInit {
     }
   }
 
+  validateForm(): boolean {
+
+    if (ValidationUtil.isEmpty(this.tour.tourName)) {
+      ToastUtil.warning(this.toastr, 'Tên tour không được để trống');
+      return false;
+    }
+
+    if (ValidationUtil.isEmpty(this.tour.categoryId)) {
+      ToastUtil.warning(this.toastr, 'Vui lòng chọn danh mục');
+      return false;
+    }
+
+    return true;
+  }
+
   updateTour() {
+
+    if (!this.validateForm()) return;
+
     const formData = new FormData();
 
     formData.append('tourName', this.tour.tourName);
@@ -76,11 +97,11 @@ export class ManagerEditTourComponent implements OnInit {
 
     this.tourService.updateTour(this.tour.id, formData).subscribe({
       next: () => {
-        this.toastr.success('Cập nhật thành công');
+        ToastUtil.success(this.toastr, 'Cập nhật thành công');
         this.router.navigate(['/manager/tours']);
       },
       error: (err) => {
-        this.toastr.error(err?.error?.message || "Cập nhật thất bại");
+        ToastUtil.error(this.toastr, err?.error?.message || 'Cập nhật thất bại');
       }
     });
   }
