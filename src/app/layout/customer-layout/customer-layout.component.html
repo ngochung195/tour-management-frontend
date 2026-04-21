@@ -4,11 +4,11 @@
         <div class="logo"> Travel<span>Go</span> </div>
 
         <nav class="nav">
-            <a routerLink="/">Trang chủ</a>
-            <a routerLink="/tour-list"> Danh sách tour </a>
-            <a routerLink="/my-bookings"> Tour đặt </a>
-            <a href="#">Khuyến mãi</a>
-            <a href="#">Liên hệ</a>
+          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Trang chủ</a>
+          <a routerLink="/tour-list" routerLinkActive="active">Danh sách tour</a>
+          <a routerLink="/my-bookings" routerLinkActive="active">Tour đặt</a>
+          <a href="#">Khuyến mãi</a>
+          <a href="#">Liên hệ</a>
         </nav>
 
         <div class="actions">

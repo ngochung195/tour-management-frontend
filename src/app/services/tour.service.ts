@@ -26,7 +26,8 @@ export class TourService {
       if (keyword) params.keyword = keyword;
       if (startDate) params.startDate = startDate;
       if (endDate) params.endDate = endDate;
-      if (categoryId) params.categoryId = categoryId;
+      if (categoryId !== undefined && categoryId !== null)
+        params.categoryId = categoryId;
 
       return this.http.get<Tour[]>(`${this.api}/search-tour`, {params});
     }
@@ -48,5 +49,9 @@ export class TourService {
 
     getCategories() {
         return this.http.get<any[]>('http://localhost:8080/api/categories');
+    }
+
+    getItineraryByTourId(id: number) {
+      return this.http.get<any[]>(`http://localhost:8080/api/itineraries/tour/${id}`);
     }
 }

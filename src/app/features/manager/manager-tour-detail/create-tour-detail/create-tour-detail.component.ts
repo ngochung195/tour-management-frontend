@@ -9,6 +9,9 @@ import { HotelService } from '../../../../services/hotel.service';
 import { VehicleService } from '../../../../services/vehicle.service';
 import { TourDetailService } from '../../../../services/tour-detail.service';
 
+import { ValidationUtil } from '../../../../shared/utils/validation.util';
+import { ToastUtil } from '../../../../shared/utils/toast.util';
+
 @Component({
   selector: 'app-manager-create-tour-detail',
   standalone: true,
@@ -43,9 +46,7 @@ export class ManagerCreateTourDetailComponent implements OnInit {
 
   loadData() {
     this.tourService.getAll().subscribe(res => this.tours = res);
-
     this.hotelService.getAll().subscribe(res => this.hotels = res);
-
     this.vehicleService.getAll().subscribe(res => this.vehicles = res);
   }
 
@@ -53,12 +54,29 @@ export class ManagerCreateTourDetailComponent implements OnInit {
     this.router.navigate(['/manager/tour-details']);
   }
 
+  validateForm(): boolean {
+
+    if (ValidationUtil.isEmpty(this.tourDetail.tourId)) {
+      ToastUtil.warning(this.toastr, 'Vui lòng chọn Tour');
+      return false;
+    }
+
+    if (ValidationUtil.isEmpty(this.tourDetail.hotelId)) {
+      ToastUtil.warning(this.toastr, 'Vui lòng chọn Khách sạn');
+      return false;
+    }
+
+    if (ValidationUtil.isEmpty(this.tourDetail.vehicleId)) {
+      ToastUtil.warning(this.toastr, 'Vui lòng chọn Phương tiện');
+      return false;
+    }
+
+    return true;
+  }
+
   saveTourDetail() {
 
-    if (!this.tourDetail.tourId || !this.tourDetail.hotelId || !this.tourDetail.vehicleId) {
-      this.toastr.warning('Vui lòng chọn đầy đủ Tour - Hotel - Vehicle');
-      return;
-    }
+    if (!this.validateForm()) return;
 
     const data = {
       tourId: this.tourDetail.tourId,
@@ -68,11 +86,11 @@ export class ManagerCreateTourDetailComponent implements OnInit {
 
     this.tourDetailService.create(data).subscribe({
       next: () => {
-        this.toastr.success('Thêm tour detail thành công');
+        ToastUtil.success(this.toastr, 'Thêm tour detail thành công');
         this.router.navigate(['/manager/tour-details']);
       },
       error: (err) => {
-        this.toastr.error(err?.error?.message || 'Thêm thất bại');
+        ToastUtil.error(this.toastr, err?.error?.message || 'Thêm thất bại');
       }
     });
   }

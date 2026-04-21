@@ -7,6 +7,8 @@ import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+import { ToastUtil } from '../../../shared/utils/toast.util';
+
 @Component({
   selector: 'app-manager-vehicle',
   standalone: true,
@@ -38,24 +40,32 @@ export class ManagerVehicleComponent implements OnInit {
   }
 
   loadVehicles() {
-    this.vehicleService.getAll().subscribe(res => {
-      this.vehicles = res;
-      this.filteredVehicles = res;
-      this.currentPage = 1;
-      this.updatePagination();
+    this.vehicleService.getAll().subscribe({
+      next: (res) => {
+        this.vehicles = res;
+        this.filteredVehicles = res;
+        this.currentPage = 1;
+        this.updatePagination();
+      },
+      error: () => {
+        ToastUtil.error(this.toastr, 'Không thể tải danh sách phương tiện');
+      }
     });
   }
 
   searchVehicle() {
-    this.vehicleService.searchVehicle(this.searchName)
-      .subscribe(res => {
-        this.filteredVehicles = res;
-        this.currentPage = 1;
-        this.updatePagination();
-      });
+
+    this.filteredVehicles = this.vehicles.filter(v =>
+      !this.searchName ||
+      v.vehicleName?.toLowerCase().includes(this.searchName.toLowerCase())
+    );
+
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   updatePagination() {
+
     this.totalPages = Math.ceil(this.filteredVehicles.length / this.pageSize);
 
     if (this.totalPages === 0) {
@@ -67,6 +77,7 @@ export class ManagerVehicleComponent implements OnInit {
   }
 
   changePage(page: number) {
+
     if (page < 1 || page > this.totalPages) return;
 
     this.currentPage = page;
@@ -75,10 +86,12 @@ export class ManagerVehicleComponent implements OnInit {
     const end = start + this.pageSize;
 
     this.pagedVehicles = this.filteredVehicles.slice(start, end);
+
     this.calculateVisiblePages();
   }
 
   calculateVisiblePages() {
+
     const range = 1;
     let start = this.currentPage - range;
     let end = this.currentPage + range;
@@ -94,6 +107,7 @@ export class ManagerVehicleComponent implements OnInit {
     }
 
     this.visiblePages = [];
+
     for (let i = start; i <= end; i++) {
       this.visiblePages.push(i);
     }
@@ -101,7 +115,8 @@ export class ManagerVehicleComponent implements OnInit {
 
   resetFilters() {
     this.searchName = '';
-    this.loadVehicles();
+    this.filteredVehicles = [...this.vehicles];
+    this.updatePagination();
   }
 
   goToCreate() {
@@ -113,6 +128,7 @@ export class ManagerVehicleComponent implements OnInit {
   }
 
   deleteVehicle(id: number) {
+
     Swal.fire({
       title: 'Bạn có chắc chắn xóa phương tiện?',
       icon: 'warning',
@@ -124,25 +140,20 @@ export class ManagerVehicleComponent implements OnInit {
       reverseButtons: true
     }).then((result) => {
 
-      if (result.isConfirmed) {
+      if (!result.isConfirmed) return;
 
-        this.vehicleService.deleteVehicle(id).subscribe({
-
-          next: () => {
-            this.toastr.success('Xóa phương tiện thành công', 'Thành công');
-            this.loadVehicles();
-          },
-
-          error: (err) => {
-            this.toastr.error(
-              err?.error?.message || 'Không thể xóa phương tiện',
-              'Lỗi'
-            );
-          }
-
-        });
-
-      }
+      this.vehicleService.deleteVehicle(id).subscribe({
+        next: () => {
+          ToastUtil.success(this.toastr, 'Xóa phương tiện thành công');
+          this.loadVehicles();
+        },
+        error: (err) => {
+          ToastUtil.error(
+            this.toastr,
+            err?.error?.message || 'Không thể xóa phương tiện'
+          );
+        }
+      });
 
     });
   }

@@ -8,6 +8,8 @@ import { ToastrService } from 'ngx-toastr';
 import { TourDetailService } from '../../../services/tour-detail.service';
 import { TourDetail } from '../../../models/tour-detail.model';
 
+import { ToastUtil } from '../../../shared/utils/toast.util';
+
 @Component({
   selector: 'app-manager-tour-detail',
   standalone: true,
@@ -21,9 +23,9 @@ export class ManagerTourDetailComponent implements OnInit {
   filtered: TourDetail[] = [];
   paged: TourDetail[] = [];
 
-  searchTour: string = '';
-  searchHotel: string = '';
-  searchVehicle: string = '';
+  searchTour = '';
+  searchHotel = '';
+  searchVehicle = '';
 
   currentPage = 1;
   pageSize = 5;
@@ -51,6 +53,7 @@ export class ManagerTourDetailComponent implements OnInit {
   }
 
   search() {
+
     this.filtered = this.tourDetails.filter(x =>
       (!this.searchTour || x.tourName?.toLowerCase().includes(this.searchTour.toLowerCase())) &&
       (!this.searchHotel || x.hotelName?.toLowerCase().includes(this.searchHotel.toLowerCase())) &&
@@ -70,6 +73,7 @@ export class ManagerTourDetailComponent implements OnInit {
   }
 
   updatePagination() {
+
     this.totalPages = Math.ceil(this.filtered.length / this.pageSize);
 
     if (this.totalPages === 0) {
@@ -86,6 +90,7 @@ export class ManagerTourDetailComponent implements OnInit {
   }
 
   changePage(page: number) {
+
     if (page < 1 || page > this.totalPages) return;
 
     this.currentPage = page;
@@ -99,6 +104,7 @@ export class ManagerTourDetailComponent implements OnInit {
   }
 
   private calculateVisiblePages() {
+
     const range = 1;
     let start = this.currentPage - range;
     let end = this.currentPage + range;
@@ -114,28 +120,22 @@ export class ManagerTourDetailComponent implements OnInit {
     }
 
     this.visiblePages = [];
+
     for (let i = start; i <= end; i++) {
       this.visiblePages.push(i);
     }
   }
 
   goToPage() {
-    if (this.pageInput === null) {
-      return;
-    }
+
+    if (this.pageInput === null) return;
 
     let page = this.pageInput;
 
-    if (page < 1) {
-      page = 1;
-    }
-
-    if (page > this.totalPages) {
-      page = this.totalPages;
-    }
+    if (page < 1) page = 1;
+    if (page > this.totalPages) page = this.totalPages;
 
     this.changePage(page);
-
     this.pageInput = null;
   }
 
@@ -148,27 +148,28 @@ export class ManagerTourDetailComponent implements OnInit {
   }
 
   delete(id: number) {
+
     Swal.fire({
       title: 'Xóa chi tiết tour?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Xóa',
       cancelButtonText: 'Hủy',
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      reverseButtons: true
+      confirmButtonColor: '#d33'
     }).then(result => {
-      if (result.isConfirmed) {
-        this.service.delete(id).subscribe({
-          next: () => {
-            this.toastr.success('Xóa chi tiết tour thành công', 'Thành công');
-            this.load();
-          },
-          error: () => {
-            this.toastr.error('Xóa chi tiết tour thất bại', 'Lỗi');
-          }
-        });
-      }
+
+      if (!result.isConfirmed) return;
+
+      this.service.delete(id).subscribe({
+        next: () => {
+          ToastUtil.success(this.toastr, 'Xóa thành công');
+          this.load();
+        },
+        error: () => {
+          ToastUtil.error(this.toastr, 'Xóa thất bại');
+        }
+      });
+
     });
   }
 }

@@ -9,6 +9,9 @@ import { TourService } from '../../../../services/tour.service';
 import { HotelService } from '../../../../services/hotel.service';
 import { VehicleService } from '../../../../services/vehicle.service';
 
+import { ValidationUtil } from '../../../../shared/utils/validation.util';
+import { ToastUtil } from '../../../../shared/utils/toast.util';
+
 @Component({
   selector: 'app-manager-edit-tour-detail',
   standalone: true,
@@ -58,26 +61,43 @@ export class ManagerEditTourDetailComponent implements OnInit {
         this.tourDetail = res;
       },
       error: () => {
-        this.toastr.error('Không tìm thấy tour detail');
+        ToastUtil.error(this.toastr, 'Không tìm thấy tour detail');
         this.router.navigate(['/manager/tour-details']);
       }
     });
   }
 
+  validateForm(): boolean {
+
+    if (ValidationUtil.isEmpty(this.tourDetail.tourId)) {
+      ToastUtil.warning(this.toastr, 'Vui lòng chọn Tour');
+      return false;
+    }
+
+    if (ValidationUtil.isEmpty(this.tourDetail.hotelId)) {
+      ToastUtil.warning(this.toastr, 'Vui lòng chọn Khách sạn');
+      return false;
+    }
+
+    if (ValidationUtil.isEmpty(this.tourDetail.vehicleId)) {
+      ToastUtil.warning(this.toastr, 'Vui lòng chọn Phương tiện');
+      return false;
+    }
+
+    return true;
+  }
+
   updateTourDetail() {
 
-    if (!this.tourDetail.tourId || !this.tourDetail.hotelId || !this.tourDetail.vehicleId) {
-      this.toastr.warning('Vui lòng chọn đầy đủ dữ liệu');
-      return;
-    }
+    if (!this.validateForm()) return;
 
     this.tourDetailService.update(this.id, this.tourDetail).subscribe({
       next: () => {
-        this.toastr.success('Cập nhật thành công');
+        ToastUtil.success(this.toastr, 'Cập nhật thành công');
         this.router.navigate(['/manager/tour-details']);
       },
       error: (err) => {
-        this.toastr.error(err?.error?.message || 'Cập nhật thất bại');
+        ToastUtil.error(this.toastr, err?.error?.message || 'Cập nhật thất bại');
       }
     });
   }

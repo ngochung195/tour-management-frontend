@@ -8,32 +8,24 @@
     </div>
 
     <div class="search-item">
-      <label>Ngày bắt đầu</label>
+      <label>Từ ngày</label>
       <input type="date" [(ngModel)]="startDate"/>
     </div>
 
     <div class="search-item">
-      <label>Ngày kết thúc</label>
+      <label>Đến ngày</label>
       <input type="date" [(ngModel)]="endDate"/>
     </div>
 
-<!--    <div class="search-item">-->
-<!--      <label>Danh mục</label>-->
-<!--      <select [(ngModel)]="categoryId">-->
-<!--        <option [ngValue]="null">Chọn danh mục</option>-->
-<!--        <option *ngFor="let c of categories" [ngValue]="c.id">-->
-<!--          {{ c.name }}-->
-<!--        </option>-->
-<!--      </select>-->
-<!--    </div>    <div class="search-item">-->
-<!--      <label>Danh mục</label>-->
-<!--      <select [(ngModel)]="categoryId">-->
-<!--        <option [ngValue]="null">Chọn danh mục</option>-->
-<!--        <option *ngFor="let c of categories" [ngValue]="c.id">-->
-<!--          {{ c.name }}-->
-<!--        </option>-->
-<!--      </select>-->
-<!--    </div>-->
+    <div class="search-item">
+      <label>Danh mục</label>
+      <select [(ngModel)]="categoryId">
+        <option [ngValue]="null">Chọn danh mục</option>
+        <option *ngFor="let c of categories" [ngValue]="c.id">
+          {{ c.categoryName }}
+        </option>
+      </select>
+    </div>
 
     <button class="btn-search" (click)="search()">
       <i class="bi bi-cloud-search icon"></i> Tìm kiếm
@@ -66,9 +58,22 @@
         {{ tour.startDate | date:'dd/MM/yyyy' }} → {{ tour.endDate | date:'dd/MM/yyyy' }}
       </p>
 
+      <p class="hotel">
+        Khách sạn: {{ tour.hotelName || 'Chưa có khách sạn' }}
+      </p>
+
+      <p class="vehicle">
+        Phương tiện: {{ tour.vehicleName || 'Chưa có phương tiện' }}
+      </p>
+
       <button type="button" class="btn-book" [routerLink]="['/tour', tour.id]">
         Xem tour
       </button>
     </div>
   </div>
 </div>
+
+<div *ngIf="tours.length === 0" class="empty">
+  Không có tour phù hợp
+</div>
+
