@@ -1,0 +1,120 @@
+<div class="promotion-admin-wrapper">
+
+  <h2 class="title">Quản lý Khuyến mãi</h2>
+
+  <div class="filter-form">
+
+    <input type="text"
+           placeholder="Tìm theo mã khuyến mãi..."
+           [(ngModel)]="searchCode" />
+
+    <div class="date-group">
+      <label>Từ ngày</label>
+      <input type="date" [(ngModel)]="searchStartDate" />
+    </div>
+
+    <div class="date-group">
+      <label>Đến ngày</label>
+      <input type="date" [(ngModel)]="searchEndDate" />
+    </div>
+
+    <select [(ngModel)]="searchStatus">
+      <option value="">Tất cả</option>
+      <option value="1">Đang hoạt động</option>
+      <option value="0">Hết hạn</option>
+    </select>
+
+    <button class="btn-search" (click)="searchPromotion()">
+      Tìm kiếm
+    </button>
+
+    <button class="btn-reset" (click)="resetFilters()">
+      Xóa lọc
+    </button>
+
+    <button class="btn btn-success btn-add" (click)="goToCreate()">
+      <i class="bi bi-plus-circle"></i> Thêm khuyến mãi
+    </button>
+
+  </div>
+
+  <!-- TABLE -->
+  <table class="table" *ngIf="pagedPromotions.length > 0">
+
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Mã khuyến mãi</th>
+      <th>Giảm giá</th>
+      <th>Ngày bắt đầu</th>
+      <th>Ngày kết thúc</th>
+      <th>Trạng thái</th>
+      <th>Hành động</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let p of pagedPromotions">
+
+      <td>{{ p.id }}</td>
+      <td>{{ p.code }}</td>
+      <td>{{ p.discount }}%</td>
+
+      <td>{{ p.startDate | date:'dd/MM/yyyy' }}</td>
+      <td>{{ p.endDate | date:'dd/MM/yyyy' }}</td>
+
+      <td>
+          <span class="status"
+                [ngClass]="p.isActive ? 'approved' : 'rejected'">
+            {{ p.isActive ? 'Đang dùng' : 'Hết hạn' }}
+          </span>
+      </td>
+
+      <td class="action-buttons">
+
+        <button class="icon-btn edit-btn"
+                (click)="goToEdit(p.id!)"
+                title="Sửa">
+          <i class="bi bi-pencil-square"></i>
+        </button>
+
+        <button class="icon-btn delete-btn"
+                (click)="deletePromotion(p.id!)"
+                title="Xóa">
+          <i class="bi bi-trash"></i>
+        </button>
+
+      </td>
+
+    </tr>
+    </tbody>
+
+  </table>
+
+  <div *ngIf="filteredPromotions.length === 0" class="empty">
+    Không có khuyến mãi nào.
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="pagination" *ngIf="totalPages > 1">
+
+    <button (click)="changePage(currentPage - 1)"
+            [disabled]="currentPage === 1">«</button>
+
+    <button *ngFor="let page of visiblePages"
+            (click)="changePage(page)"
+            [class.active]="page === currentPage">
+      {{ page }}
+    </button>
+
+    <button (click)="changePage(currentPage + 1)"
+            [disabled]="currentPage === totalPages">»</button>
+
+    <input type="number"
+           [(ngModel)]="pageInput"
+           (keyup.enter)="goToPage()"
+           placeholder="Trang" />
+
+  </div>
+
+</div>

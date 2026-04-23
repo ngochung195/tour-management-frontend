@@ -231,3 +231,11 @@
     color: #fff;
     transform: scale(1.1);
 }
+
+.tour-wrapper .table tbody tr {
+  transition: all 0.15s ease;
+}
+
+.tour-wrapper .table tbody tr:hover {
+  background: #eff6ff;
+}

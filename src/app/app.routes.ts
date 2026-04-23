@@ -52,6 +52,16 @@ import {
 import {
   ManagerEditItineraryComponent
 } from './features/manager/manager-itinerary/edit-itinerary/edit-itinerary.component';
+import {PromotionService} from './services/promotion.service';
+import {PromotionComponent} from './features/customer/promotion/promotion.component';
+import {ContactComponent} from './features/customer/contact/contact.component';
+import {AdminContactComponent} from './features/admin/admin-contact/admin-contact.component';
+import {AdminPromotionComponent} from './features/admin/admin-promotion/admin-promotion.component';
+import {
+  AdminCreatePromotionComponent
+} from './features/admin/admin-promotion/create-promotion/create-promotion.component';
+import {AdminEditPromotionComponent} from './features/admin/admin-promotion/edit-promotion/edit-promotion.component';
+import {AdminRevenueComponent} from './features/admin/admin-revenue/admin-revenue.component';
 
 export const routes: Routes = [
 
@@ -80,7 +90,13 @@ export const routes: Routes = [
                 data: { role: 'ROLE_CUSTOMER' }
             },
 
-          { path: 'payment-result', component: PaymentResultComponent }
+            { path: 'payment-result', component: PaymentResultComponent },
+
+            { path: 'promotions', component: PromotionComponent },
+
+            { path: 'contacts', component: ContactComponent }
+
+
         ]
     },
 
@@ -100,7 +116,15 @@ export const routes: Routes = [
             { path: 'tours/create', component: AdminCreateTourComponent },
             { path: 'tours/edit/:id', component: AdminEditTourComponent },
 
-            { path: 'bookings', component: AdminBookingComponent }
+            { path: 'bookings', component: AdminBookingComponent },
+
+            { path: 'contacts', component: AdminContactComponent },
+
+            { path: 'promotions', component: AdminPromotionComponent},
+            { path: 'promotions/create', component: AdminCreatePromotionComponent },
+            { path: 'promotions/edit/:id', component: AdminEditPromotionComponent },
+
+            { path: 'revenues', component: AdminRevenueComponent },
         ]
     },
 

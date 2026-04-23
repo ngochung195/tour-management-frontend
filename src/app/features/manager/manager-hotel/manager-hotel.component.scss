@@ -464,3 +464,8 @@
   color: #fff;
   transform: scale(1.1);
 }
+
+.hotel-wrapper .table tbody tr:hover {
+  background: #eff6ff;
+  transition: background 0.2s ease;
+}

@@ -2,6 +2,11 @@
     padding: 24px;
 }
 
+.booking-wrapper .table tbody tr:hover {
+  background: #fff7ed;
+  transition: background 0.2s ease;
+}
+
 .title {
     margin-bottom: 20px;
     font-weight: 600;

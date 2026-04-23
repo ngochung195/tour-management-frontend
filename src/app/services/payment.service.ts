@@ -1,4 +1,4 @@
-  import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -19,9 +19,14 @@ export class PaymentService {
   constructor(private http: HttpClient) {}
 
   createPayment(bookingId: number, bankCode: string = 'NCB'): Observable<PaymentResponse> {
+
     const params = new HttpParams()
-      .set('bookingId', bookingId)
+      .set('bookingId', bookingId.toString())
       .set('bankCode', bankCode);
-    return this.http.get<PaymentResponse>(`${this.api}/create_payment`, { params });
+
+    return this.http.get<PaymentResponse>(
+      `${this.api}/create_payment`,
+      { params }
+    );
   }
 }
