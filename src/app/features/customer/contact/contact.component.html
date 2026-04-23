@@ -1,0 +1,81 @@
+<div class="container py-5 contact-container">
+
+  <div class="contact-card shadow-lg rounded-4 overflow-hidden">
+
+    <!-- LEFT: CONTACT INFO -->
+    <div class="contact-left">
+
+      <h3 class="contact-title">
+        <i class="bi bi-chat-dots"></i> Liên Hệ Ngay
+      </h3>
+
+      <p class="contact-desc">
+        Chúng tôi luôn sẵn sàng hỗ trợ bạn 24/7. Hãy liên hệ nếu bạn cần tư vấn!
+      </p>
+
+      <div class="contact-info-item">
+        <i class="bi bi-geo-alt-fill contact-icon"></i>
+        <div>
+          <div class="contact-info-label">Văn phòng</div>
+          <div class="contact-info-value">Hà Nội, Việt Nam</div>
+        </div>
+      </div>
+
+      <div class="contact-info-item">
+        <i class="bi bi-telephone-fill contact-icon"></i>
+        <div>
+          <div class="contact-info-label">Hotline</div>
+          <div class="contact-info-value">0333666888</div>
+        </div>
+      </div>
+
+      <div class="contact-info-item">
+        <i class="bi bi-envelope-fill contact-icon"></i>
+        <div>
+          <div class="contact-info-label">Email</div>
+          <div class="contact-info-value">support&#64;travelgo.com</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="contact-right">
+
+      <!-- MAP TOP -->
+      <div class="map-wrapper">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18..."
+          loading="lazy">
+        </iframe>
+      </div>
+
+      <!-- FORM BOTTOM -->
+      <div class="contact-form">
+
+        <form *ngIf="form" [formGroup]="form" (ngSubmit)="submit()">
+
+          <div class="form-row">
+            <input class="form-control" formControlName="userName" placeholder="Họ tên">
+            <input class="form-control" formControlName="email" placeholder="Email">
+          </div>
+
+          <input class="form-control" formControlName="subject" placeholder="Chủ đề">
+
+          <textarea class="form-control"
+                    rows="4"
+                    formControlName="message"
+                    placeholder="Nội dung"></textarea>
+
+          <button class="btn-primary w-100" type="submit">
+            <i class="bi bi-send"></i> Gửi liên hệ
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

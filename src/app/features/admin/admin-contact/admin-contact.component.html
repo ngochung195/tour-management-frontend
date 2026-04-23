@@ -1,0 +1,109 @@
+<div class="tour-admin-wrapper">
+
+  <h2 class="title">Quản lý Liên hệ</h2>
+
+  <div class="filter-form">
+
+    <input type="text"
+           placeholder="Tìm theo tên hoặc email..."
+           [(ngModel)]="searchKeyword" />
+
+    <select [(ngModel)]="searchStatus">
+      <option value="">Tất cả trạng thái</option>
+      <option value="NEW">Mới gửi</option>
+      <option value="READ">Đã xem</option>
+      <option value="REPLIED">Đã phản hồi</option>
+    </select>
+
+    <button class="btn-search" (click)="search()">
+      Tìm kiếm
+    </button>
+
+    <button class="btn-reset" (click)="resetFilters()">
+      Xóa lọc
+    </button>
+
+  </div>
+
+  <table class="table" *ngIf="pagedContacts.length > 0">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Họ tên</th>
+      <th>Email</th>
+      <th>Chủ đề</th>
+      <th>Nội dung</th>
+      <th>Trạng thái</th>
+      <th>Hành động</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let c of pagedContacts">
+      <td>{{ c.id }}</td>
+      <td>{{ c.userName }}</td>
+      <td>{{ c.email }}</td>
+      <td>{{ c.subject }}</td>
+      <td>{{ c.message }}</td>
+
+      <td>
+          <span class="status"
+                [ngClass]="{
+                  'new': c.status === 'NEW',
+                  'read': c.status === 'READ',
+                  'replied': c.status === 'REPLIED'
+                }">
+            {{ getStatusLabel(c.status) }}
+          </span>
+      </td>
+
+      <td>
+        <div class="action-center">
+          <select
+            [(ngModel)]="c.status"
+            (change)="updateStatus(c)"
+            class="status-select">
+
+            <option value="NEW">Mới gửi</option>
+            <option value="READ">Đã xem</option>
+            <option value="REPLIED">Đã phản hồi</option>
+
+          </select>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="filteredContacts.length === 0" class="empty">
+    Không có dữ liệu.
+  </div>
+
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">«</button>
+
+    <ng-container *ngIf="visiblePages[0] > 1">
+      <button (click)="changePage(1)">1</button>
+      <span *ngIf="visiblePages[0] > 2">...</span>
+    </ng-container>
+
+    <button *ngFor="let page of visiblePages"
+            (click)="changePage(page)"
+            [class.active]="page === currentPage">
+      {{ page }}
+    </button>
+
+    <ng-container *ngIf="visiblePages[visiblePages.length - 1] < totalPages">
+      <span *ngIf="visiblePages[visiblePages.length - 1] < totalPages - 1">...</span>
+      <button (click)="changePage(totalPages)">
+        {{ totalPages }}
+      </button>
+    </ng-container>
+
+    <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">»</button>
+
+    <input type="number" [(ngModel)]="pageInput" (keyup.enter)="goToPage()"
+           placeholder="Trang" min="1" [max]="totalPages"/>
+  </div>
+
+</div>

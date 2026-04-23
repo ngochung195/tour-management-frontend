@@ -31,14 +31,12 @@
 
   </div>
 
-  <!-- ITINERARY -->
   <div class="itinerary" *ngIf="groupedItineraries.length > 0">
 
     <h3 class="itinerary-title">Lịch trình tour</h3>
 
     <div *ngFor="let day of groupedItineraries" class="day-block">
 
-      <!-- Ngày + Date -->
       <h4 class="day-title">
         Ngày {{ day.dayNumber }}
         <span *ngIf="day.date">
@@ -46,7 +44,6 @@
       </span>
       </h4>
 
-      <!-- Danh sách hoạt động -->
       <div class="activity" *ngFor="let item of day.items">
 
         <div class="time">
@@ -56,6 +53,106 @@
         <div class="content">
           <h5>{{ item.title }}</h5>
           <p>{{ item.description }}</p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="review-section">
+
+    <h3 class="review-title">Đánh giá của khách hàng</h3>
+
+    <!-- FORM -->
+    <div class="review-form" *ngIf="tour">
+
+    <textarea
+      [(ngModel)]="reviewText"
+      placeholder="Viết đánh giá của bạn..."
+    ></textarea>
+
+      <div class="rating-box">
+        <label>Đánh giá:</label>
+        <select [(ngModel)]="rating">
+          <option [value]="5">⭐⭐⭐⭐⭐</option>
+          <option [value]="4">⭐⭐⭐⭐</option>
+          <option [value]="3">⭐⭐⭐</option>
+          <option [value]="2">⭐⭐</option>
+          <option [value]="1">⭐</option>
+        </select>
+      </div>
+
+      <button (click)="submitReview()" class="btn-review">
+        Gửi đánh giá
+      </button>
+
+    </div>
+
+    <div class="review-list">
+
+      <div class="review-item" *ngFor="let r of reviews">
+
+        <!-- HEADER -->
+        <div class="review-header">
+
+          <div class="user-info">
+            <strong>{{ r.userName }}</strong>
+
+            <div class="stars">
+              <ng-container *ngFor="let _ of getStars(r.rating)">
+                ⭐
+              </ng-container>
+
+              <span class="rating-number">
+              ({{ r.rating }}/5)
+            </span>
+            </div>
+          </div>
+
+          <!-- ACTION -->
+          <div class="review-actions">
+            <button class="menu-btn" (click)="toggleMenu(r.id)">⋮</button>
+
+            <div class="dropdown" *ngIf="openMenuId === r.id">
+              <button class="icon-btn edit" (click)="startEdit(r)">
+                <i class="bi bi-pencil-square"></i> Sửa
+              </button>
+
+              <button class="icon-btn delete" (click)="deleteReview(r.id)">
+                <i class="bi bi-trash"></i> Xóa
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CONTENT (luôn hiển thị đúng) -->
+        <p class="review-text" *ngIf="editId !== r.id">
+          {{ r.reviewText }}
+        </p>
+
+        <!-- EDIT MODE -->
+        <div *ngIf="editId === r.id" class="edit-box">
+
+          <textarea [(ngModel)]="editText"></textarea>
+
+          <div class="edit-actions">
+
+            <select [(ngModel)]="editRating">
+              <option *ngFor="let i of [5,4,3,2,1]" [value]="i">
+                {{ i }} ⭐
+              </option>
+            </select>
+
+            <div class="btn-group">
+              <button class="btn-save" (click)="saveEdit(r.id)">Lưu</button>
+              <button class="btn-cancel" (click)="cancelEdit()">Hủy</button>
+            </div>
+
+          </div>
+
         </div>
 
       </div>

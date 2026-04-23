@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { RouterModule } from '@angular/router';
 
+import { ValidationUtil } from '../../../../shared/utils/validation.util';
+
 @Component({
   selector: 'app-admin-edit-tour',
   standalone: true,
@@ -19,12 +21,14 @@ export class AdminEditTourComponent implements OnInit {
   selectedFile: File | null = null;
   previewUrl: string | null = null;
 
+  categories: any[] = [];
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private tourService: TourService,
     private toastr: ToastrService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadCategories();
@@ -36,8 +40,6 @@ export class AdminEditTourComponent implements OnInit {
       });
     }
   }
-
-  categories: any[] = [];
 
   loadCategories() {
     this.tourService.getCategories().subscribe(res => {
@@ -58,7 +60,50 @@ export class AdminEditTourComponent implements OnInit {
     }
   }
 
+  validateForm(): boolean {
+
+    if (ValidationUtil.isEmpty(this.tour.tourName)) {
+      this.toastr.warning('Tên tour không được để trống');
+      return false;
+    }
+
+    if (ValidationUtil.isEmpty(this.tour.categoryId)) {
+      this.toastr.warning('Vui lòng chọn danh mục');
+      return false;
+    }
+
+    if (this.tour.price <= 0) {
+      this.toastr.warning('Giá phải lớn hơn 0');
+      return false;
+    }
+
+    if (this.tour.quantity <= 0) {
+      this.toastr.warning('Số lượng phải lớn hơn 0');
+      return false;
+    }
+
+    if (ValidationUtil.isEmpty(this.tour.startDate)) {
+      this.toastr.warning('Vui lòng chọn ngày bắt đầu');
+      return false;
+    }
+
+    if (ValidationUtil.isEmpty(this.tour.endDate)) {
+      this.toastr.warning('Vui lòng chọn ngày kết thúc');
+      return false;
+    }
+
+    if (new Date(this.tour.startDate) > new Date(this.tour.endDate)) {
+      this.toastr.warning('Ngày bắt đầu phải nhỏ hơn ngày kết thúc');
+      return false;
+    }
+
+    return true;
+  }
+
   updateTour() {
+
+    if (!this.validateForm()) return;
+
     const formData = new FormData();
 
     formData.append('tourName', this.tour.tourName);

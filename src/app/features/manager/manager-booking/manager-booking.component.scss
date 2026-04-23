@@ -192,3 +192,8 @@
 .pagination input[type=number] {
   -moz-appearance: textfield;
 }
+
+.booking-wrapper .table tbody tr:hover {
+  background: #eff6ff;
+  transition: background 0.2s ease;
+}

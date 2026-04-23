@@ -1,0 +1,72 @@
+<div class="edit-container">
+
+  <h2>Chỉnh sửa Khuyến mãi</h2>
+
+  <form (ngSubmit)="updatePromotion()" *ngIf="promotion">
+
+    <!-- CODE -->
+    <div class="form-group">
+      <label>Mã khuyến mãi</label>
+      <input type="text"
+             [(ngModel)]="promotion.code"
+             name="code"
+             required>
+    </div>
+
+    <!-- DISCOUNT -->
+    <div class="form-group">
+      <label>Giảm giá (%)</label>
+      <input type="number"
+             [(ngModel)]="promotion.discount"
+             name="discount"
+             min="1"
+             max="100"
+             required>
+    </div>
+
+    <!-- START DATE -->
+    <div class="form-group">
+      <label>Ngày bắt đầu</label>
+      <input type="datetime-local"
+             [(ngModel)]="promotion.startDate"
+             name="startDate"
+             required>
+    </div>
+
+    <!-- END DATE -->
+    <div class="form-group">
+      <label>Ngày kết thúc</label>
+      <input type="datetime-local"
+             [(ngModel)]="promotion.endDate"
+             name="endDate"
+             required>
+    </div>
+
+    <!-- ACTIVE -->
+    <div class="form-group">
+      <label>Trạng thái</label>
+      <select [(ngModel)]="promotion.isActive" name="isActive">
+        <option [ngValue]="true">Đang hoạt động</option>
+        <option [ngValue]="false">Không hoạt động</option>
+      </select>
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="btn-group">
+
+      <button type="button"
+              class="btn-secondary"
+              routerLink="/admin/promotions">
+        Hủy
+      </button>
+
+      <button type="submit"
+              class="btn-primary">
+        Cập nhật
+      </button>
+
+    </div>
+
+  </form>
+
+</div>
