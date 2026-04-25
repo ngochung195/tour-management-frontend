@@ -1,0 +1,143 @@
+<div class="dashboard-container" *ngIf="!loading; else loadingTpl">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Admin Dashboard</h1>
+    <p>Tổng quan hệ thống TravelGo</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <div class="icon">👤</div>
+      <div class="info">
+        <div class="value">{{ data?.totalUsers }}</div>
+        <div class="label">Người dùng</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="icon">🧭</div>
+      <div class="info">
+        <div class="value">{{ data?.totalTours }}</div>
+        <div class="label">Tours</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="icon">📦</div>
+      <div class="info">
+        <div class="value">{{ data?.totalBookings }}</div>
+        <div class="label">Bookings</div>
+      </div>
+    </div>
+
+    <div class="stat-card highlight">
+      <div class="icon">💰</div>
+      <div class="info">
+        <div class="value">
+          {{ data?.monthlyRevenue | number:'1.0-0' }} ₫
+        </div>
+        <div class="label">Doanh thu tháng</div>
+      </div>
+    </div>
+
+    <div class="stat-card highlight">
+      <div class="icon">📊</div>
+      <div class="info">
+        <div class="value">
+          {{ data?.quarterlyRevenue | number:'1.0-0' }} ₫
+        </div>
+        <div class="label">Doanh thu quý</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="icon">📩</div>
+      <div class="info">
+        <div class="value">{{ data?.newContacts }}</div>
+        <div class="label">Liên hệ mới</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CHARTS -->
+  <div class="charts">
+
+    <!-- LINE -->
+    <div class="chart-card large">
+      <div class="chart-header">
+        <h3>Doanh thu theo tháng</h3>
+      </div>
+      <div class="chart-body">
+        <canvas #lineChartRef></canvas>
+      </div>
+    </div>
+
+    <!-- PIE -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Top Tour</h3>
+      </div>
+      <div class="chart-body">
+        <canvas #pieChartRef></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-row">
+
+    <!-- TOUR NỔI BẬT -->
+    <div class="bottom-card">
+      <div class="bottom-card-header">
+        <h3>Tour nổi bật</h3>
+      </div>
+      <div class="tour-list">
+        <div class="tour-item" *ngFor="let tour of data?.topTours; let i = index">
+          <span class="rank">{{ i + 1 }}</span>
+          <div class="tour-info">
+            <div class="tour-name">{{ tour.tourName }}</div>
+            <div class="tour-meta">
+              {{ tour.location }} · {{ tour.daysUntilStart }} ngày nữa
+            </div>
+          </div>
+          <div class="tour-right">
+            <div class="tour-bookings">{{ tour.totalBookings }} bookings</div>
+            <span class="status-badge" [ngClass]="tour.status?.toLowerCase()">
+            {{ tour.status === 'OPEN' ? 'Đang mở'
+              : tour.status === 'ALMOST_FULL' ? 'Gần full'
+                : 'Đã đóng' }}
+          </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOẠT ĐỘNG GẦN ĐÂY -->
+    <div class="bottom-card">
+      <div class="bottom-card-header">
+        <h3>Hoạt động gần đây</h3>
+      </div>
+      <div class="activity-list">
+        <div class="activity-item" *ngFor="let act of data?.recentActivities">
+          <div class="act-dot" [ngClass]="getActivityColor(act.type)"></div>
+          <div class="act-info">
+            <div class="act-title">{{ act.title }}</div>
+            <div class="act-meta">{{ act.timeAgo }} · {{ act.subtitle }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<ng-template #loadingTpl>
+  <div class="loading">
+    Đang tải dữ liệu...
+  </div>
+</ng-template>

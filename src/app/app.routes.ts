@@ -52,7 +52,6 @@ import {
 import {
   ManagerEditItineraryComponent
 } from './features/manager/manager-itinerary/edit-itinerary/edit-itinerary.component';
-import {PromotionService} from './services/promotion.service';
 import {PromotionComponent} from './features/customer/promotion/promotion.component';
 import {ContactComponent} from './features/customer/contact/contact.component';
 import {AdminContactComponent} from './features/admin/admin-contact/admin-contact.component';
@@ -62,6 +61,8 @@ import {
 } from './features/admin/admin-promotion/create-promotion/create-promotion.component';
 import {AdminEditPromotionComponent} from './features/admin/admin-promotion/edit-promotion/edit-promotion.component';
 import {AdminRevenueComponent} from './features/admin/admin-revenue/admin-revenue.component';
+import {AdminDashboardComponent} from './features/admin/dashboard/dashboard.component';
+import {ManagerDashboardComponent} from './features/manager/dashboard/dashboard.component';
 
 export const routes: Routes = [
 
@@ -108,6 +109,8 @@ export const routes: Routes = [
         children: [
             { path: '', component: AdminComponent },
 
+            { path: 'dashboard', component: AdminDashboardComponent },
+
             { path: 'users', component: AdminUserComponent },
             { path: 'users/create', component: CreateUserComponent },
             { path: 'users/edit/:id', component: EditUserComponent },
@@ -135,6 +138,8 @@ export const routes: Routes = [
         data: { role: 'ROLE_MANAGER' },
         children: [
             { path: '', component: ManagerComponent },
+
+            { path: 'dashboard', component: ManagerDashboardComponent },
 
             { path: 'tours', component: ManagerTourComponent },
             { path: 'tours/create', component: ManagerCreateTourComponent },
