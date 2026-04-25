@@ -50,6 +50,11 @@ export class AuthService {
     return decoded?.username || decoded?.sub || 'User';
   }
 
+  getUserId(): number | null {
+    const decoded = this.getDecodedToken();
+    return decoded?.userId || decoded?.id || null;
+  }
+
   isLoggedIn(): boolean {
     return !!this.getToken();
   }

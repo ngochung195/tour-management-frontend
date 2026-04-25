@@ -1,0 +1,207 @@
+<div class="db-wrap" *ngIf="!loading; else skeleton">
+
+  <!-- Header -->
+  <div class="db-header">
+    <div>
+      <h2>Manager Dashboard</h2>
+      <p class="sub">Tổng quan hoạt động của bạn</p>
+    </div>
+    <span class="pending-badge" *ngIf="dashboard.pendingBookings > 0">
+      {{ dashboard.pendingBookings }} đơn chờ duyệt
+    </span>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-icon">💰</span>
+      <div>
+        <div class="stat-label">Tổng doanh thu</div>
+        <div class="stat-value">{{ formatCurrency(dashboard.totalRevenue) }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">⏳</span>
+      <div>
+        <div class="stat-label">Đơn chờ xử lý</div>
+        <div class="stat-value">{{ dashboard.pendingBookings }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">🏝</span>
+      <div>
+        <div class="stat-label">Tour đang hoạt động</div>
+        <div class="stat-value">{{ dashboard.activeTours }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">⭐</span>
+      <div>
+        <div class="stat-label">Đánh giá trung bình</div>
+        <div class="stat-value">{{ dashboard.avgRating | number:'1.1-1' }} / 5</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Revenue chart + Top Tours donut (2 cột) -->
+  <div class="two-col chart-row">
+
+    <!-- Bar chart -->
+    <div class="section-card">
+      <h3>Doanh thu theo tháng (năm hiện tại)</h3>
+      <div class="bar-chart">
+        <div class="bar-col" *ngFor="let d of chartData">
+
+          <div class="bar-fill"
+               [style.height.%]="getBarHeight(d.revenue)"
+               [ngClass]="{
+                 'bar-zero': d.revenue === 0,
+                 'bar-active': d.revenue > 0
+               }">
+
+            <div class="bar-tooltip">
+              {{ formatCurrency(d.revenue) }}
+            </div>
+
+          </div>
+
+          <span class="bar-label">{{ d.month }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Donut chart -->
+    <div class="section-card">
+      <h3>Tour bán chạy nhất</h3>
+      <div *ngIf="dashboard.topTours?.length; else noTour">
+        <div class="donut-wrap">
+
+          <!-- SVG Donut -->
+          <svg width="110" height="110" viewBox="0 0 110 110" style="flex-shrink:0">
+            <circle cx="55" cy="55" r="40" fill="none"
+                    stroke="#f3f4f6" stroke-width="18"/>
+            <circle
+              *ngFor="let seg of donutSegments"
+              cx="55" cy="55" r="40"
+              fill="none"
+              [attr.stroke]="seg.color"
+              stroke-width="18"
+              [attr.stroke-dasharray]="seg.dash"
+              [attr.stroke-dashoffset]="seg.offset"
+            />
+            <text x="55" y="51" text-anchor="middle"
+                  style="font-size:11px;fill:#6b7280">Top</text>
+            <text x="55" y="64" text-anchor="middle"
+                  style="font-size:13px;font-weight:700;fill:#1e3a8a">
+              {{ dashboard.topTours.length }}
+            </text>
+          </svg>
+
+          <!-- Legend -->
+          <div class="donut-legend">
+            <div class="legend-item"
+                 *ngFor="let t of dashboard.topTours; let i = index">
+              <span class="legend-dot" [style.background]="donutColors[i]"></span>
+              <span class="legend-name">{{ t.tourName }}</span>
+              <span class="legend-count">{{ t.totalBookings }} đơn</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <ng-template #noTour>
+        <p class="empty">Chưa có dữ liệu</p>
+      </ng-template>
+    </div>
+
+  </div>
+
+  <!-- Booking + Review (2 cột) -->
+  <div class="two-col">
+
+    <!-- Recent Bookings -->
+    <div class="section-card">
+      <h3>Booking gần nhất</h3>
+      <table *ngIf="dashboard.recentBookings?.length; else noBooking">
+        <thead>
+        <tr>
+          <th>Khách hàng</th>
+          <th>Tour</th>
+          <th>Tổng tiền</th>
+          <th>Trạng thái</th>
+          <th>Ngày đặt</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let b of dashboard.recentBookings">
+          <td>
+            <div class="user-cell">
+                <span class="avatar" [style.background]="getAvatarColor(b.userName)">
+                  {{ getInitials(b.userName) }}
+                </span>
+              {{ b.userName }}
+            </div>
+          </td>
+          <td>{{ b.tourName }}</td>
+          <td>{{ formatCurrency(b.total) }}</td>
+          <td>
+              <span class="status-pill" [ngClass]="getStatusClass(b.status)">
+                {{ getStatusLabel(b.status) }}
+              </span>
+          </td>
+          <td class="muted">{{ b.bookingDate | date:'dd/MM/yyyy' }}</td>
+        </tr>
+        </tbody>
+      </table>
+      <ng-template #noBooking>
+        <p class="empty">Chưa có booking nào</p>
+      </ng-template>
+    </div>
+
+    <!-- Recent Reviews -->
+    <div class="section-card">
+      <h3>Review gần nhất</h3>
+      <table *ngIf="dashboard.recentReviews?.length; else noReview">
+        <thead>
+        <tr>
+          <th>Khách</th>
+          <th>Tour</th>
+          <th>Điểm</th>
+          <th>Nhận xét</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let r of dashboard.recentReviews">
+          <td>
+            <div class="user-cell">
+                <span class="avatar" [style.background]="getAvatarColor(r.userName)">
+                  {{ getInitials(r.userName) }}
+                </span>
+              {{ r.userName }}
+            </div>
+          </td>
+          <td>{{ r.tourName }}</td>
+          <td class="stars">{{ getStars(r.rating) }}</td>
+          <td class="muted review-text">{{ r.reviewText }}</td>
+        </tr>
+        </tbody>
+      </table>
+      <ng-template #noReview>
+        <p class="empty">Chưa có review nào</p>
+      </ng-template>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Skeleton loading -->
+<ng-template #skeleton>
+  <div class="skeleton-wrap">
+    <div class="sk-title"></div>
+    <div class="stats-grid">
+      <div class="sk-card" *ngFor="let i of [1,2,3,4]"></div>
+    </div>
+    <div class="sk-chart"></div>
+  </div>
+</ng-template>

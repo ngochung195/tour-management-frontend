@@ -8,6 +8,9 @@ import { ReviewService } from '../../../services/review.service';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
+import { ValidationUtil } from '../../../shared/utils/validation.util';
+import { ToastUtil } from '../../../shared/utils/toast.util';
+
 @Component({
   selector: 'app-tour-detail',
   standalone: true,
@@ -55,7 +58,6 @@ export class TourDetailComponent implements OnInit {
     }
   }
 
-  // ================= ITINERARY =================
   loadItinerary(tourId: number) {
     this.itineraryService.getByTour(tourId).subscribe(data => {
 
@@ -93,7 +95,6 @@ export class TourDetailComponent implements OnInit {
     });
   }
 
-  // ================= IMAGE =================
   getImageUrl(img: string): string {
     if (!img) return '';
 
@@ -108,15 +109,36 @@ export class TourDetailComponent implements OnInit {
     return this.apiUrl + img;
   }
 
-  // ================= REVIEWS =================
   loadReviews(tourId: number) {
     this.reviewService.getByTour(tourId).subscribe((data: any) => {
       this.reviews = data;
     });
   }
 
+  validateReview(): boolean {
+
+    if (ValidationUtil.isEmpty(this.reviewText)) {
+      ToastUtil.warning(this.toastr, 'Nội dung đánh giá không được để trống');
+      return false;
+    }
+
+    if (this.reviewText.trim().length < 5) {
+      ToastUtil.warning(this.toastr, 'Đánh giá phải có ít nhất 5 ký tự');
+      return false;
+    }
+
+    if (this.rating < 1 || this.rating > 5) {
+      ToastUtil.warning(this.toastr, 'Điểm đánh giá phải từ 1 đến 5');
+      return false;
+    }
+
+    return true;
+  }
+
   submitReview() {
     if (!this.tour) return;
+
+    if (!this.validateReview()) return;
 
     const req = {
       tourId: this.tour.id,
@@ -129,15 +151,15 @@ export class TourDetailComponent implements OnInit {
         this.reviewText = '';
         this.rating = 5;
         this.loadReviews(this.tour!.id);
-        this.toastr.success('Gửi đánh giá thành công');
+        ToastUtil.success(this.toastr, 'Gửi đánh giá thành công');
       },
       error: () => {
-        this.toastr.error('Gửi đánh giá thất bại');
+        ToastUtil.error(this.toastr, 'Bạn chưa đặt tour hoặc tour chưa được xác nhận, không thể đánh giá');
       }
     });
   }
 
-  // ================= EDIT =================
+
   startEdit(r: any) {
     this.editId = r.id;
     this.editText = r.reviewText;
@@ -149,7 +171,29 @@ export class TourDetailComponent implements OnInit {
     this.editId = null;
   }
 
+  validateEditReview(): boolean {
+
+    if (ValidationUtil.isEmpty(this.editText)) {
+      ToastUtil.warning(this.toastr, 'Nội dung không được để trống');
+      return false;
+    }
+
+    if (this.editText.trim().length < 5) {
+      ToastUtil.warning(this.toastr, 'Nội dung phải có ít nhất 5 ký tự');
+      return false;
+    }
+
+    if (this.editRating < 1 || this.editRating > 5) {
+      ToastUtil.warning(this.toastr, 'Điểm đánh giá phải từ 1 đến 5');
+      return false;
+    }
+
+    return true;
+  }
+
   saveEdit(id: number) {
+
+    if (!this.validateEditReview()) return;
 
     const req = {
       reviewText: this.editText,
@@ -160,30 +204,28 @@ export class TourDetailComponent implements OnInit {
       next: () => {
         this.editId = null;
         this.loadReviews(this.tour!.id);
-        this.toastr.success('Cập nhật review thành công');
+        ToastUtil.success(this.toastr, 'Cập nhật review thành công');
       },
       error: () => {
-        this.toastr.error('Cập nhật thất bại');
+        ToastUtil.error(this.toastr, 'Cập nhật thất bại');
       }
     });
   }
 
-  // ================= DELETE =================
   deleteReview(id: number) {
 
     this.reviewService.delete(id).subscribe({
       next: () => {
         this.loadReviews(this.tour!.id);
         this.openMenuId = null;
-        this.toastr.success('Xóa review thành công');
+        ToastUtil.success(this.toastr, 'Xóa review thành công');
       },
       error: () => {
-        this.toastr.error('Xóa thất bại');
+        ToastUtil.error(this.toastr, 'Xóa thất bại');
       }
     });
   }
 
-  // ================= MENU =================
   toggleMenu(id: number) {
     this.openMenuId = this.openMenuId === id ? null : id;
   }
@@ -192,7 +234,6 @@ export class TourDetailComponent implements OnInit {
     this.openMenuId = null;
   }
 
-  // ================= STAR =================
   getStars(rating: number): number[] {
     const safeRating = Math.max(0, Math.min(5, rating || 0));
     return Array(safeRating).fill(0);
