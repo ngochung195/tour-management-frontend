@@ -61,6 +61,10 @@ export class UserService {
     );
   }
 
+  changePassword(data: any) {
+    return this.http.put(`${this.api}/change-password`, data);
+  }
+
   getProfile(){
     return this.http.get<User>(`${this.api}/me`);
   }

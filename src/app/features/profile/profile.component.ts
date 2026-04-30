@@ -28,6 +28,14 @@ export class ProfileComponent implements OnInit{
 
   isLoaded: boolean = false;
 
+  showPasswordForm = false;
+
+  passwordData = {
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  };
+
   constructor(
     private userService: UserService,
     private location: Location,
@@ -60,5 +68,39 @@ export class ProfileComponent implements OnInit{
 
   goBack(){
     this.location.back();
+  }
+
+  togglePasswordForm() {
+    this.showPasswordForm = !this.showPasswordForm;
+
+    if (!this.showPasswordForm) {
+      this.passwordData = {
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      };
+    }
+  }
+
+  changePassword() {
+    if (!this.passwordData.currentPassword || !this.passwordData.newPassword) {
+      this.toastr.error('Vui lòng nhập đầy đủ thông tin');
+      return;
+    }
+
+    if (this.passwordData.newPassword !== this.passwordData.confirmPassword) {
+      this.toastr.error('Mật khẩu xác nhận không khớp');
+      return;
+    }
+
+    this.userService.changePassword(this.passwordData).subscribe({
+      next: () => {
+        this.toastr.success('Đổi mật khẩu thành công!');
+        this.togglePasswordForm();
+      },
+      error: (err) => {
+        this.toastr.error(err?.error?.message || 'Đổi mật khẩu thất bại');
+      }
+    });
   }
 }

@@ -6,11 +6,12 @@ import { RouterLink, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Category} from '../../../models/category.model.';
 import {ManagerCategoryService} from '../../../services/category.service';
+import {ChatComponent} from '../chat/chat.component';
 
 @Component({
   selector: 'app-tour-list',
   standalone: true,
-  imports: [NgFor, CommonModule, RouterLink, RouterModule, FormsModule],
+  imports: [NgFor, CommonModule, RouterLink, RouterModule, FormsModule, ChatComponent],
   templateUrl: './tour-list.component.html',
   styleUrls: ['./tour-list.component.scss']
 })
@@ -25,6 +26,8 @@ export class TourListComponent implements OnInit {
   categoryId: number | null = null;
 
   categories: Category[] = [];
+
+  chatOpen: boolean = false;
 
   apiUrl = 'http://localhost:8080';
 
@@ -86,5 +89,9 @@ export class TourListComponent implements OnInit {
     this.categoryId = null;
 
     this.tours = this.allTours;
+  }
+
+  toggleChat() {
+    this.chatOpen = !this.chatOpen;
   }
 }

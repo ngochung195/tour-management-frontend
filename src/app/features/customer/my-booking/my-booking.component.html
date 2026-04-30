@@ -55,8 +55,7 @@
                       Thanh toán
                     </button>
                     <button *ngIf="b.status === 'PENDING' || b.status === 'PAID'
-                            || b.status === 'APPROVED'" class="btn-cancel"
-                        (click)="cancelBooking(b.id)">
+                            " class="btn-cancel" (click)="cancelBooking(b.id)">
                         Hủy
                     </button>
                 </td>
