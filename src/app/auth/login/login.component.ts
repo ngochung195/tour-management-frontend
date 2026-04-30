@@ -31,7 +31,14 @@ export class LoginComponent implements OnInit{
   }
 
   login() {
+
+    if (!this.email || !this.password) {
+      this.toastr.warning('Vui lòng nhập đủ thông tin');
+      return;
+    }
+
     this.authService.login(this.email, this.password).subscribe({
+
       next: (res) => {
         const token = res.token;
         localStorage.setItem('token', token);
@@ -53,14 +60,22 @@ export class LoginComponent implements OnInit{
       },
 
       error: (err) => {
-        if (err.status === 401) {
-          this.toastr.error('Sai email hoặc mật khẩu');
+        const msg = err.error?.message;
+
+        if (msg === 'Tài khoản không tồn tại') {
+          this.toastr.error('Tài khoản không tồn tại');
         }
-        else if (err.error?.message) {
-          this.toastr.error(err.error.message);
+        else if (msg === 'Sai email') {
+          this.toastr.error('Sai email');
+        }
+        else if (msg === 'Sai mật khẩu') {
+          this.toastr.error('Sai mật khẩu');
+        }
+        else if (msg === 'Vui lòng nhập đủ thông tin') {
+          this.toastr.warning('Vui lòng nhập đủ thông tin');
         }
         else {
-          this.toastr.error('Đăng nhập thất bại');
+          this.toastr.error(msg || 'Đăng nhập thất bại');
         }
       }
     });

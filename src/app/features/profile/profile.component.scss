@@ -127,3 +127,85 @@ input:focus {
     width: 100%;
   }
 }
+
+.security-section {
+  background: #f1f1f1;
+  border-radius: 20px;
+  padding: 0 12px;
+  transition: 0.2s ease;
+
+  &:has(.password-form-wrap.open) {
+    background: #eaeaea;
+  }
+}
+
+.password-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  height: 46px;
+}
+
+.pw-dots {
+  font-size: 0.85rem;
+  color: #888;
+  letter-spacing: 3px;
+}
+
+.btn-change-pw {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  color: #ff7a00;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+
+  svg {
+    transition: transform 0.25s ease;
+  }
+
+  svg.rotated {
+    transform: rotate(180deg);
+  }
+
+  &:hover {
+    color: #e66a00;
+  }
+}
+
+.password-form-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+  overflow: hidden;
+
+  &.open {
+    grid-template-rows: 1fr;
+  }
+}
+
+.password-form-inner {
+  min-height: 0;
+  padding-bottom: 0;
+  transition: padding-bottom 0.3s ease;
+
+  .password-form-wrap.open & {
+    padding-bottom: 12px;
+  }
+}
+
+.password-form-inner {
+  input {
+    background: #fff;
+
+    &:focus {
+      background: #f7f7f7;
+    }
+  }
+}

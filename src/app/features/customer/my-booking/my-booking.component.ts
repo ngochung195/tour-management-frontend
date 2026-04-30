@@ -167,6 +167,14 @@ export class MyBookingComponent implements OnInit {
   }
 
   cancelBooking(id: number) {
+
+    const booking = this.bookings.find(b => b.id === id);
+
+    if (booking?.status === 'APPROVED') {
+      this.toastr.warning('Tour đã được xác nhận, không thể hủy', 'Thông báo');
+      return;
+    }
+
     Swal.fire({
       title: 'Bạn có chắc muốn hủy tour này không?',
       icon: 'warning',

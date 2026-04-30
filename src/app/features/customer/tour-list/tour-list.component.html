@@ -77,3 +77,19 @@
   Không có tour phù hợp
 </div>
 
+<div class="chat-float" (click)="toggleChat()">
+  🤖
+</div>
+
+<!-- FIX: thêm class + đảm bảo render -->
+<div class="chat-wrapper" *ngIf="chatOpen">
+
+  <div class="chat-header">
+    <span>TravelGo AI</span>
+    <button (click)="toggleChat()">✖</button>
+  </div>
+
+  <app-chat></app-chat>
+
+</div>
+

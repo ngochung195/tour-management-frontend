@@ -1,0 +1,36 @@
+<div class="chatbox">
+
+  <div class="messages">
+
+    <div *ngFor="let m of messages"
+         class="bubble"
+         [class.user]="m.role === 'user'"
+         [class.bot]="m.role === 'bot'"
+         [innerHTML]="m.role === 'bot' ? formatText(m.content) : m.content">
+    </div>
+
+    <div *ngIf="loading" class="bubble bot">
+      Đang trả lời...
+    </div>
+
+  </div>
+
+  <!-- INPUT -->
+  <div class="input-box">
+
+    <input
+      [(ngModel)]="userInput"
+      placeholder="Nhập câu hỏi..."
+      (keyup.enter)="send()"
+      (input)="onTyping()" />
+
+    <button
+      class="send-btn"
+      *ngIf="hasText"
+      (click)="send()">
+      ➤
+    </button>
+
+  </div>
+
+</div>

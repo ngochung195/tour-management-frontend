@@ -102,15 +102,25 @@ export class ManagerDashboardComponent implements OnInit {
 
   getStatusClass(status: string): string {
     const map: Record<string, string> = {
-      CONFIRMED: 's-confirmed', PENDING: 's-pending', CANCELLED: 's-cancelled'
+      PENDING: 'pending',
+      PAID: 'paid',
+      APPROVED: 'approved',
+      REJECTED: 'rejected',
+      CANCELLED: 'cancelled'
     };
+
     return map[status] ?? '';
   }
 
   getStatusLabel(status: string): string {
     const map: Record<string, string> = {
-      CONFIRMED: 'Xác nhận', PENDING: 'Chờ duyệt', CANCELLED: 'Đã hủy'
+      PENDING: 'Chờ xử lý',
+      PAID: 'Đã thanh toán',
+      APPROVED: 'Đã xác nhận',
+      REJECTED: 'Bị từ chối',
+      CANCELLED: 'Đã hủy'
     };
+
     return map[status] ?? status;
   }
 
